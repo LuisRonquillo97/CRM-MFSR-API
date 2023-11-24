@@ -1,0 +1,6 @@
+@CRM_MFSR_API_HostAddress = http://localhost:5067
+
+GET {{CRM_MFSR_API_HostAddress}}/api/GetById?id=
+Accept: application/json
+
+###
