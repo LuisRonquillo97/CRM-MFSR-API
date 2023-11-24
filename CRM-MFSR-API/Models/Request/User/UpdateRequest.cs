@@ -3,7 +3,7 @@
 namespace CRM_MFSR_API.Models.Request.User
 {
     /// <summary>
-    /// Model to update an existing user.
+    /// Data to use when you call /api/User/Update.
     /// </summary>
     public class UpdateRequest
     {

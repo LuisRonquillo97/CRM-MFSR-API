@@ -42,7 +42,7 @@ namespace CRM_MFSR_API.Controllers
             {
                 return BadRequest(new ErrorResponse { Message = ex.Message });
             }
-            
+
         }
         /// <summary>
         /// Search users by Query.
@@ -100,7 +100,7 @@ namespace CRM_MFSR_API.Controllers
         /// </summary>
         /// <param name="id">User UUID.</param>
         /// <param name="deletedBy">person who deactivate the record.</param>
-        /// <returns></returns>
+        /// <returns>void.</returns>
         [HttpDelete("Delete")]
         public ActionResult Delete(Guid id, string deletedBy)
         {
@@ -125,9 +125,9 @@ namespace CRM_MFSR_API.Controllers
         {
             try
             {
-                return Ok(new HasRoleResponse(Service.HasRole(userId, roleId)));
+                return Ok(new HasRoleResponse(Service.HasRole(userId, roleId), userId, roleId));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(new ErrorResponse { Message = ex.Message });
             }
@@ -144,7 +144,9 @@ namespace CRM_MFSR_API.Controllers
             try
             {
                 return Ok(Service.ValidateLogin(email, password));
-            }catch(Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 return BadRequest(new ErrorResponse { Message = ex.Message });
             }
         }

@@ -3,11 +3,32 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SQLDB.Context
 {
+    /// <summary>
+    /// DB Connection class.
+    /// </summary>
+    /// <remarks>Uses EF Core and migrations.</remarks>
+    /// <param name="options">SQLContext options.</param>
     public class SqlContext(DbContextOptions<SqlContext> options) : DbContext(options)
     {
+        /// <summary>
+        /// User entity.
+        /// </summary>
         public DbSet<User> Users { get; set; }
+
+        /// <summary>
+        /// Role entity.
+        /// </summary>
         public DbSet<Role> Roles { get; set; }
+
+        /// <summary>
+        /// User role entity.
+        /// </summary>
         public DbSet<UserRole> UserRoles { get; set; }
+
+        /// <summary>
+        /// Actions to be performed when models are being created
+        /// </summary>
+        /// <param name="modelBuilder">ModelBuilder.</param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             #region Indexes

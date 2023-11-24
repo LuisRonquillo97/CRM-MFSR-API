@@ -14,6 +14,7 @@ namespace Repositories.Implementations
         /// DBContext.
         /// </summary>
         private SqlContext Context { get; set; }
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -22,6 +23,7 @@ namespace Repositories.Implementations
         {
             Context = context;
         }
+
         /// <summary>
         /// Creates a new row of the provided Entity.
         /// </summary>
@@ -40,6 +42,7 @@ namespace Repositories.Implementations
                 throw;
             }
         }
+
         /// <summary>
         /// Set the field 'IsActive' switch to false of the provided entity.
         /// </summary>
@@ -61,6 +64,7 @@ namespace Repositories.Implementations
                 throw;
             }
         }
+
         /// <summary>
         /// Gets all records matching the search filter.
         /// </summary>
@@ -70,6 +74,7 @@ namespace Repositories.Implementations
         {
             return Context.Set<T>().Where(x => x == filter).ToList();
         }
+
         /// <summary>
         /// Get one Entity by his ID.
         /// </summary>
@@ -79,6 +84,7 @@ namespace Repositories.Implementations
         {
             return Context.Set<T>().First(x => x.Id == id);
         }
+
         /// <summary>
         /// Updates data from an entity already-saved record.
         /// </summary>

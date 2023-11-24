@@ -4,7 +4,7 @@ using Entities.Models;
 namespace CRM_MFSR_API.Models.Request.User
 {
     /// <summary>
-    /// Model used to create a new user.
+    /// Data to use when you call /api/User/Create.
     /// </summary>
     public class CreateRequest
     {
@@ -35,7 +35,7 @@ namespace CRM_MFSR_API.Models.Request.User
         /// <summary>
         /// Transform this class to User Entity.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>User Entity</returns>
         public Entities.Models.User ToUserEntity()
         {
             Guid id = Guid.NewGuid();

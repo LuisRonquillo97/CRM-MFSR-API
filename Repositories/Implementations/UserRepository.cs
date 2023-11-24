@@ -14,6 +14,7 @@ namespace Repositories.Implementations
         /// DBContext.
         /// </summary>
         SqlContext Context;
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -22,6 +23,7 @@ namespace Repositories.Implementations
         {
             Context = context;
         }
+
         /// <summary>
         /// Override of base GetAll. Gets all users with user roles and each role information.
         /// </summary>
@@ -49,6 +51,7 @@ namespace Repositories.Implementations
 #pragma warning restore CS8620 // El argumento no se puede usar para el parámetro debido a las diferencias en la nulabilidad de los tipos de referencia.
             return users;
         }
+
         /// <summary>
         /// Gets user data, with roles.
         /// </summary>
@@ -56,8 +59,9 @@ namespace Repositories.Implementations
         /// <returns>User data.</returns>
         public new User GetById(Guid id)
         {
-            return Context.Users.Include(x => x.UserRoles).ThenInclude(x=>x.Role).First(x => x.Id == id);
+            return Context.Users.Include(x => x.UserRoles).ThenInclude(x => x.Role).FirstOrDefault(x => x.Id == id) ?? throw new Exception($"User with ID {id} was not found.");
         }
+
         /// <summary>
         /// Update user data with roles.
         /// </summary>
@@ -94,6 +98,7 @@ namespace Repositories.Implementations
             }
 
         }
+
         /// <summary>
         /// Deactivate the provided user.
         /// </summary>
@@ -116,26 +121,26 @@ namespace Repositories.Implementations
                 throw;
             }
         }
+
         /// <summary>
         /// Validates if the Login is successfull or not.
         /// </summary>
         /// <param name="email">User email.</param>
         /// <param name="password">Password for user.</param>
         /// <returns>User.</returns>
-        public User ValidateLogin(string email, string password)
+        public User ValidateLogin(string email, string password = "")
         {
             try
             {
-                User data = Context.Users.FirstOrDefault(x=>x.Email == email && x.Password == password && x.IsActive);
-                if(data == null) {
-                    throw new Exception("Email/Password was incorrect.");
-                }
-                return data;
-            }catch (Exception)
+                User? data = Context.Users.FirstOrDefault(x => x.Email == email && x.Password == password && x.IsActive);
+                return data ?? throw new Exception("Email/Password was incorrect.");
+            }
+            catch (Exception)
             {
                 throw;
             }
         }
+
         /// <summary>
         /// Determinates if the user has an especific role.
         /// </summary>
@@ -144,7 +149,7 @@ namespace Repositories.Implementations
         /// <returns>true if the user has the role, false if not.</returns>
         public bool HasRole(Guid userId, Guid roleId)
         {
-            return this.GetById(userId).UserRoles.FirstOrDefault(x=>x.RoleId == roleId) != null;
+            return GetById(userId).UserRoles?.FirstOrDefault(x => x.RoleId == roleId) != null;
         }
     }
 }

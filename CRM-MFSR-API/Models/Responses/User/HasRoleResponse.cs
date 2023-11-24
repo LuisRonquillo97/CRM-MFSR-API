@@ -3,8 +3,19 @@
     /// <summary>
     /// Response for has role endpoint.
     /// </summary>
-    public class HasRoleResponse(bool hasRole)
+    public class HasRoleResponse(bool hasRole, Guid userId, Guid roleId)
     {
+        /// <summary>
+        /// User ID
+        /// </summary>
+        public Guid UserID { get; set; }
+        /// <summary>
+        /// Role ID
+        /// </summary>
+        public Guid RoleID { get; set; }
+        /// <summary>
+        /// Determinates if the user has the specified role.
+        /// </summary>
         public bool HasRole { get; set; } = hasRole;
     }
 }
