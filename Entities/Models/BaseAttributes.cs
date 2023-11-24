@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SQLDB.Entities
+namespace Entities.Models
 {
     public class BaseAttributes
     {

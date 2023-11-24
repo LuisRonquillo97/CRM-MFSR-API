@@ -1,7 +1,9 @@
 ﻿using CRM_MFSR_API.Models.Request.User;
+using CRM_MFSR_API.Models.Responses;
+using CRM_MFSR_API.Models.Responses.User;
+using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
-using SQLDB.Entities;
 
 namespace CRM_MFSR_API.Controllers
 {
@@ -32,7 +34,15 @@ namespace CRM_MFSR_API.Controllers
         [HttpGet("GetById")]
         public ActionResult GetById(Guid id)
         {
-            return Ok(Service.GetById(id));
+            try
+            {
+                return Ok(Service.GetById(id));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ErrorResponse { Message = ex.Message });
+            }
+            
         }
         /// <summary>
         /// Search users by Query.
@@ -42,57 +52,101 @@ namespace CRM_MFSR_API.Controllers
         [HttpPost("Search")]
         public ActionResult Search(SearchRequest filters)
         {
-            User userFilter = new User
+            try
             {
-                Email = filters.Email,
-                FirstName = filters.FirstName,
-                LastName = filters.LastName,
-                CreatedBy = string.Empty,
-                Password = string.Empty,
-            };
-            return Ok(Service.GetAll(userFilter));
+                return Ok(Service.GetAll(filters.ToUserEntity()));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ErrorResponse { Message = ex.Message });
+            }
         }
+        /// <summary>
+        /// Creates a new user.
+        /// </summary>
+        /// <param name="data">Data to save.</param>
+        /// <returns>Record added.</returns>
         [HttpPost("Create")]
         public ActionResult Create(CreateRequest data)
         {
-            Guid id = Guid.NewGuid();
-            List<UserRole> roles = new List<UserRole>();
-            data.RoleIds.ForEach(x => roles.Add(new UserRole { RoleId = x, UserId = id, CreatedBy = data.CreatedBy }));
-            User userData = new User { 
-                Id = id,
-                FirstName = data.FirstName, 
-                LastName = data.LastName, 
-                Email = data.Email, 
-                Password = data.Password, 
-                CreatedBy = data.CreatedBy,
-                UserRoles = roles
-            };
-            return Ok(Service.Create(userData));
+            try
+            {
+                return Ok(Service.Create(data.ToUserEntity()));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Could not create: {ex.Message}");
+            }
         }
+        /// <summary>
+        /// Updates an existing user.
+        /// </summary>
+        /// <param name="data">data to update.</param>
+        /// <returns>Record updated.</returns>
         [HttpPut("Update")]
         public ActionResult Update(UpdateRequest data)
         {
-            Guid id = Guid.NewGuid();
-            List<UserRole> roles = new List<UserRole>();
-            data.RoleIds.ForEach(x => roles.Add(new UserRole { RoleId = x, UserId = id, CreatedBy = data.UpdatedBy }));
-            User userData = new User
+            try
             {
-                Id = id,
-                FirstName = data.FirstName,
-                LastName = data.LastName,
-                Email = data.Email,
-                Password = data.Password,
-                LastUpdatedAt = DateTime.Now,
-                LastUpdatedBy = data.UpdatedBy,
-                UserRoles = roles
-            };
-            return Ok(Service.Update(userData));
+                return Ok(Service.Update(data.ToUserEntity()));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Could not update: {ex.Message}");
+            }
         }
+        /// <summary>
+        /// Deactivates an existing user.
+        /// </summary>
+        /// <param name="id">User UUID.</param>
+        /// <param name="deletedBy">person who deactivate the record.</param>
+        /// <returns></returns>
         [HttpDelete("Delete")]
         public ActionResult Delete(Guid id, string deletedBy)
         {
-            Service.Delete(id, deletedBy);
-            return Ok();
+            try
+            {
+                Service.Delete(id, deletedBy);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Could not delete: {ex.Message}");
+            }
+        }
+        /// <summary>
+        /// Determinates if user has provided role.
+        /// </summary>
+        /// <param name="userId">User UUID.</param>
+        /// <param name="roleId">Role UUID.</param>
+        /// <returns>boolean to determinate if user has role.</returns>
+        [HttpGet("HasRole")]
+        public ActionResult HasRole(Guid userId, Guid roleId)
+        {
+            try
+            {
+                return Ok(new HasRoleResponse(Service.HasRole(userId, roleId)));
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(new ErrorResponse { Message = ex.Message });
+            }
+        }
+        /// <summary>
+        /// Login method.
+        /// </summary>
+        /// <param name="email">provided email.</param>
+        /// <param name="password">provided password.</param>
+        /// <returns>User data if login is correct.</returns>
+        [HttpPost("Login")]
+        public ActionResult ValidateLogin(string email, string password)
+        {
+            try
+            {
+                return Ok(Service.ValidateLogin(email, password));
+            }catch(Exception ex) {
+                return BadRequest(new ErrorResponse { Message = ex.Message });
+            }
         }
     }
 }

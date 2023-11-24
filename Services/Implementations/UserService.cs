@@ -1,19 +1,17 @@
-﻿using Repositories.Implementations;
+﻿using Entities.Models;
+using Repositories.Implementations;
 using Services.Interfaces;
 using SQLDB.Context;
-using SQLDB.Entities;
 
 namespace Services.Implementations
 {
     public class UserService : IUserService<User>
     {
-        public BaseRepository<User> Repository { get; set; }
-        public UserRepository UserRepository { get; set; }
+        public UserRepository Repository { get; set; }
 
         public UserService(SqlContext context)
         {
             Repository = new UserRepository(context);
-            UserRepository = new UserRepository(context);
         }
 
         public User Create(User entity)
@@ -28,17 +26,27 @@ namespace Services.Implementations
 
         public List<User> GetAll(User filter)
         {
-            return UserRepository.GetAll(filter);
+            return Repository.GetAll(filter);
         }
 
         public User GetById(Guid id)
         {
-            return UserRepository.GetById(id);
+            return Repository.GetById(id);
         }
 
         public User Update(User entity)
         {
-            return UserRepository.Update(entity);
+            return Repository.Update(entity);
+        }
+
+        public bool HasRole(Guid userId, Guid roleId)
+        {
+            return Repository.HasRole(userId, roleId);
+        }
+
+        public User ValidateLogin(string email, string password)
+        {
+            return Repository.ValidateLogin(email, password);
         }
     }
 }

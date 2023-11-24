@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SQLDB.Entities;
+﻿using Entities.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace SQLDB.Context
 {

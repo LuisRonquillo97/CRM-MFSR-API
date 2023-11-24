@@ -1,6 +1,6 @@
 ﻿using Repositories.Interfaces;
 using SQLDB.Context;
-using SQLDB.Entities;
+using Entities.Models;
 
 namespace Repositories.Implementations
 {

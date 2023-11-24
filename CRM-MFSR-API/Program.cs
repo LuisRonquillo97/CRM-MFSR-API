@@ -1,9 +1,10 @@
+using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using Services.Implementations;
 using Services.Interfaces;
 using SQLDB.Context;
-using SQLDB.Entities;
 using System.Text.Json.Serialization;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +18,10 @@ builder.Services.AddDbContext<SqlContext>(options => options.UseSqlServer(connec
 // Add services to the container.
 builder.Services.AddTransient<IUserService<User>, UserService>();
 builder.Services.AddControllers().AddJsonOptions(options =>
-        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+}
+        );
 var app = builder.Build();
 AppContext.SetSwitch("System.Globalization.Invariant", true);
 // Configure the HTTP request pipeline.

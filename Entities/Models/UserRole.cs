@@ -1,4 +1,4 @@
-﻿namespace SQLDB.Entities
+﻿namespace Entities.Models
 {
     public class UserRole : BaseAttributes
     {
