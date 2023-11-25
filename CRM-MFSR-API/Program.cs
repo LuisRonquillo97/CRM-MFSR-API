@@ -1,3 +1,5 @@
+using AutoMapper;
+using CRM_MFSR_API.MappingProfiles.EntitiesDto;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using Services.Implementations;
@@ -30,16 +32,23 @@ builder.Services.AddSwaggerGen(c =>
     var filePath = Path.Combine(AppContext.BaseDirectory, "CRM-MFSR-API.xml");
     c.IncludeXmlComments(filePath);
 });
+
 //Add connection
 string connection = new ConfigurationBuilder().AddJsonFile(path: Directory.GetCurrentDirectory() + @"\appsettings.json").Build().GetConnectionString("local") ?? "";
 builder.Services.AddDbContext<SqlContext>(options => options.UseSqlServer(connection));
+
 // Add services to the container.
 builder.Services.AddTransient<IUserService<User>, UserService>();
+
+//controllers
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-}
-        );
+});
+
+//mappings
+builder.Services.AddAutoMapper(typeof(UserProfile));
+
 var app = builder.Build();
 AppContext.SetSwitch("System.Globalization.Invariant", true);
 // Configure the HTTP request pipeline.

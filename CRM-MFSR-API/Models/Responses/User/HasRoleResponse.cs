@@ -8,11 +8,11 @@
         /// <summary>
         /// User ID
         /// </summary>
-        public Guid UserID { get; set; }
+        public Guid UserID { get; set; } = userId;
         /// <summary>
         /// Role ID
         /// </summary>
-        public Guid RoleID { get; set; }
+        public Guid RoleID { get; set; } = roleId;
         /// <summary>
         /// Determinates if the user has the specified role.
         /// </summary>

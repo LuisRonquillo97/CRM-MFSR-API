@@ -79,6 +79,8 @@ namespace Repositories.Implementations
                     user.LastName = entity.LastName;
                     user.Email = entity.Email;
                     user.Password = entity.Password;
+                    user.LastUpdatedBy = entity.LastUpdatedBy;
+                    user.LastUpdatedAt = entity.LastUpdatedAt;
                     Context.Users.Update(user);
                     Context.UserRoles.Where(x => x.UserId == entity.Id).ExecuteDelete();
                     foreach (UserRole role in entity.UserRoles)
@@ -112,7 +114,11 @@ namespace Repositories.Implementations
                 entity.IsActive = false;
                 entity.DeactivatedAt = DateTime.Now;
                 entity.DeactivatedBy = deletedBy;
-                entity.UserRoles.ForEach(x => x.IsActive = false);
+                entity.UserRoles.ForEach(x => { 
+                    x.IsActive = false; 
+                    x.DeactivatedBy = deletedBy;
+                    x.DeactivatedAt = DateTime.Now;
+                });
                 Context.Update(entity);
                 Context.SaveChanges();
             }
@@ -132,7 +138,10 @@ namespace Repositories.Implementations
         {
             try
             {
-                User? data = Context.Users.FirstOrDefault(x => x.Email == email && x.Password == password && x.IsActive);
+                User? data = Context.Users
+                    .Include(x => x.UserRoles)
+                    .ThenInclude(x=> x.Role)
+                    .FirstOrDefault(x => EF.Functions.Collate(x.Email, "SQL_Latin1_General_CP1_CS_AS") == email && EF.Functions.Collate(x.Password, "SQL_Latin1_General_CP1_CS_AS") == password && x.IsActive);
                 return data ?? throw new Exception("Email/Password was incorrect.");
             }
             catch (Exception)
@@ -149,7 +158,7 @@ namespace Repositories.Implementations
         /// <returns>true if the user has the role, false if not.</returns>
         public bool HasRole(Guid userId, Guid roleId)
         {
-            return GetById(userId).UserRoles?.FirstOrDefault(x => x.RoleId == roleId) != null;
+            return GetById(userId).UserRoles?.FirstOrDefault(x => x.RoleId == roleId && x.IsActive) != null;
         }
     }
 }

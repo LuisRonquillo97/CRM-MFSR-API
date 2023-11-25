@@ -38,7 +38,7 @@ namespace CRM_MFSR_API.Models.Request.User
         public Entities.Models.User ToUserEntity()
         {
             List<UserRole> roles = [];
-            this.RoleIds.ForEach(x => roles.Add(new UserRole { RoleId = x, UserId = this.Id, CreatedBy = this.UpdatedBy }));
+            this.RoleIds.ForEach(x => roles.Add(new UserRole { RoleId = x, UserId = this.Id, CreatedBy = this.UpdatedBy, LastUpdatedAt = DateTime.Now, LastUpdatedBy = this.UpdatedBy }));
             return new Entities.Models.User
             {
                 Id = this.Id,
