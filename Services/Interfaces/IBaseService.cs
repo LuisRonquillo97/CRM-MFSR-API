@@ -1,11 +1,15 @@
-﻿using Repositories.Implementations;
+﻿using Entities.Models;
 using Repositories.Interfaces;
-using SQLDB.Entities;
 
 namespace Services.Interfaces
 {
-    public interface IBaseService<T> : IBaseRepository<T> where T : BaseAttributes 
+    /// <summary>
+    /// Base service interface.
+    /// </summary>
+    /// <remarks>Inherits from IBaseRepository.</remarks>
+    /// <typeparam name="T">Model BaseAttributes, or any of its inherits</typeparam>
+    public interface IBaseService<T> : IBaseRepository<T> where T : BaseAttributes
     {
-        BaseRepository<T> Repository { get; set; }
+
     }
 }
