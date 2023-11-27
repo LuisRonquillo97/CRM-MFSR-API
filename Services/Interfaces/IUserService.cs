@@ -16,12 +16,11 @@ namespace Services.Interfaces
         public UserRepository Repository { get; set; }
 
         /// <summary>
-        /// Determinates if an especific user, has an especific role.
+        /// Gets all user permissions.
         /// </summary>
         /// <param name="userId">User ID.</param>
-        /// <param name="roleId">Role ID.</param>
-        /// <returns>boolean.</returns>
-        public bool HasRole(Guid userId, Guid roleId);
+        /// <returns>permission list.</returns>
+        public List<Permission> GetPermissions(Guid userId);
 
         /// <summary>
         /// Login method.

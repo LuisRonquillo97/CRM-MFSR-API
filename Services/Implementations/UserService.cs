@@ -2,6 +2,7 @@
 using Repositories.Implementations;
 using Services.Interfaces;
 using SQLDB.Context;
+using SQLDB.Migrations;
 
 namespace Services.Implementations
 {
@@ -76,17 +77,6 @@ namespace Services.Implementations
         }
 
         /// <summary>
-        /// Determinates if an especific user, has an especific role.
-        /// </summary>
-        /// <param name="userId">User ID.</param>
-        /// <param name="roleId">Role ID.</param>
-        /// <returns>boolean.</returns>
-        public bool HasRole(Guid userId, Guid roleId)
-        {
-            return Repository.HasRole(userId, roleId);
-        }
-
-        /// <summary>
         /// Login method.
         /// </summary>
         /// <param name="email">email to login.</param>
@@ -95,6 +85,11 @@ namespace Services.Implementations
         public User ValidateLogin(string email, string password)
         {
             return Repository.ValidateLogin(email, password);
+        }
+
+        public List<Permission> GetPermissions(Guid userId)
+        {
+            return Repository.GetPermissions(userId);
         }
     }
 }

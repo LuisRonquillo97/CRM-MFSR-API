@@ -7,12 +7,12 @@ namespace CRM_MFSR_API.MappingProfiles.EntitiesDto
     /// <summary>
     /// User mapper profile User/UserDto.
     /// </summary>
-    public class UserProfile : Profile
+    public class EntitiesDtoProfile : Profile
     {
         /// <summary>
         /// Constructor.
         /// </summary>
-        public UserProfile()
+        public EntitiesDtoProfile()
         {
             CreateMap<User, UserDto>()
                 .ForMember(dest => dest.UserRoles, opt => opt.MapFrom(src => src.UserRoles)).ReverseMap();

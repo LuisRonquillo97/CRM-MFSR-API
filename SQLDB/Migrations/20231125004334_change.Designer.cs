@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SQLDB.Context;
 
@@ -11,9 +12,11 @@ using SQLDB.Context;
 namespace SQLDB.Migrations
 {
     [DbContext(typeof(SqlContext))]
-    partial class SqlContextModelSnapshot : ModelSnapshot
+    [Migration("20231125004334_change")]
+    partial class change
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,72 +24,6 @@ namespace SQLDB.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("Entities.Models.Permission", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<DateTime?>("DeactivatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DeactivatedBy")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("IdRole")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Key")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastUpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastUpdatedBy")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IdRole");
-
-                    b.ToTable("Permissions");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("d7368da3-cc3d-4862-a435-5e5636f82014"),
-                            CreatedAt = new DateTime(2023, 11, 27, 18, 53, 27, 626, DateTimeKind.Utc).AddTicks(4505),
-                            CreatedBy = "MainSeed",
-                            Description = "Has all permissions. only for the role Admin.",
-                            IdRole = new Guid("381dd445-a67c-4a24-bbb7-0d7814b09cca"),
-                            IsActive = true,
-                            Key = "All.All",
-                            Name = "Admin master permission"
-                        });
-                });
 
             modelBuilder.Entity("Entities.Models.Role", b =>
                 {
@@ -139,8 +76,8 @@ namespace SQLDB.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("381dd445-a67c-4a24-bbb7-0d7814b09cca"),
-                            CreatedAt = new DateTime(2023, 11, 27, 12, 53, 27, 626, DateTimeKind.Local).AddTicks(4456),
+                            Id = new Guid("974dbff1-db5e-4871-b1dc-6a39519c76af"),
+                            CreatedAt = new DateTime(2023, 11, 24, 18, 43, 34, 122, DateTimeKind.Local).AddTicks(9112),
                             CreatedBy = "mainSeed",
                             Description = "Has full permissions.",
                             IsActive = true,
@@ -209,8 +146,8 @@ namespace SQLDB.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("a9c61db9-ec53-4907-b82c-f6979bd6604c"),
-                            CreatedAt = new DateTime(2023, 11, 27, 12, 53, 27, 626, DateTimeKind.Local).AddTicks(4335),
+                            Id = new Guid("f2d47980-339e-4778-b224-b9e41ec4549e"),
+                            CreatedAt = new DateTime(2023, 11, 24, 18, 43, 34, 122, DateTimeKind.Local).AddTicks(9015),
                             CreatedBy = "mainSeed",
                             Email = "admin@mail.com",
                             FirstName = "First",
@@ -268,24 +205,13 @@ namespace SQLDB.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("6e57d031-01b6-40f5-a089-a6e40884bc02"),
-                            CreatedAt = new DateTime(2023, 11, 27, 18, 53, 27, 626, DateTimeKind.Utc).AddTicks(4482),
+                            Id = new Guid("2a85a830-6e21-4b4d-9579-876eb383a346"),
+                            CreatedAt = new DateTime(2023, 11, 25, 0, 43, 34, 122, DateTimeKind.Utc).AddTicks(9131),
                             CreatedBy = "mainSeed",
                             IsActive = true,
-                            RoleId = new Guid("381dd445-a67c-4a24-bbb7-0d7814b09cca"),
-                            UserId = new Guid("a9c61db9-ec53-4907-b82c-f6979bd6604c")
+                            RoleId = new Guid("974dbff1-db5e-4871-b1dc-6a39519c76af"),
+                            UserId = new Guid("f2d47980-339e-4778-b224-b9e41ec4549e")
                         });
-                });
-
-            modelBuilder.Entity("Entities.Models.Permission", b =>
-                {
-                    b.HasOne("Entities.Models.Role", "Role")
-                        .WithMany("Permissions")
-                        .HasForeignKey("IdRole")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("Entities.Models.UserRole", b =>
@@ -309,8 +235,6 @@ namespace SQLDB.Migrations
 
             modelBuilder.Entity("Entities.Models.Role", b =>
                 {
-                    b.Navigation("Permissions");
-
                     b.Navigation("UserRoles");
                 });
 

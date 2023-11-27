@@ -1,33 +1,25 @@
 ﻿using AutoMapper;
 using CRM_MFSR_API.Models.Dtos.Entities;
-using CRM_MFSR_API.Models.Dtos.Security;
-using CRM_MFSR_API.Models.Request.User;
 using CRM_MFSR_API.Models.Responses;
-using CRM_MFSR_API.Models.Responses.Security;
-using CRM_MFSR_API.Models.Responses.User;
 using Entities.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using NuGet.Protocol;
-using Security.Helpers;
 using Services.Interfaces;
-using System.Security.Claims;
 
 namespace CRM_MFSR_API.Controllers
 {
     /// <summary>
-    /// User Controller.
+    /// Role Controller.
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
-    public class UserController : Controller
+    [Authorize]
+    public class RoleController : Controller
     {
         /// <summary>
-        /// User Service.
+        /// Role Service.
         /// </summary>
-        private IUserService<User> Service { get; set; }
+        private IRoleService<Role> Service { get; set; }
 
         /// <summary>
         /// Automapper Service
@@ -38,25 +30,24 @@ namespace CRM_MFSR_API.Controllers
         /// User controller's contructor.
         /// </summary>
         /// <param name="service">User Service Interface. Dependency Injection.</param>
-        /// <param name="mapper">Automapper interface.</param>
-        public UserController(IUserService<User> service, IMapper mapper)
+        /// <param name="mapper">Automapper instance.</param>
+        public RoleController(IRoleService<Role> service, IMapper mapper)
         {
             Service = service;
             _mapper = mapper;
         }
 
         /// <summary>
-        /// Get's an User by his ID
+        /// Get's a role by his ID
         /// </summary>
         /// <param name="id">UUID.</param>
-        /// <returns>User data.</returns>
+        /// <returns>role data.</returns>
         [HttpGet("GetById")]
-        [Authorize]
-        public ActionResult<UserDto> GetById(Guid id)
+        public ActionResult<RoleDto> GetById(Guid id)
         {
             try
             {
-                return Ok(_mapper.Map<User, UserDto>(Service.GetById(id)));
+                return Ok(_mapper.Map<Role, RoleDto>(Service.GetById(id)));
             }
             catch (Exception ex)
             {
@@ -70,12 +61,11 @@ namespace CRM_MFSR_API.Controllers
         /// <param name="filters">Query.</param>
         /// <returns>Matching users.</returns>
         [HttpPost("Search")]
-        [Authorize]
-        public ActionResult<List<UserDto>> Search(SearchRequest filters)
+        public ActionResult<List<RoleDto>> Search(RoleDto filters)
         {
             try
             {
-                return Ok(_mapper.Map<List<User>, List<UserDto>>(Service.GetAll(filters.ToUserEntity())));
+                return Ok(_mapper.Map<List<Role>, List<RoleDto>>(Service.GetAll(_mapper.Map<RoleDto, Role>(filters))));
             }
             catch (Exception ex)
             {
@@ -88,12 +78,11 @@ namespace CRM_MFSR_API.Controllers
         /// <param name="data">Data to save.</param>
         /// <returns>Record added.</returns>
         [HttpPost("Create")]
-        [Authorize]
-        public ActionResult<UserDto> Create(CreateRequest data)
+        public ActionResult<RoleDto> Create(RoleDto data)
         {
             try
             {
-                return Ok(_mapper.Map<User, UserDto>(Service.Create(data.ToUserEntity())));
+                return Ok(_mapper.Map<Role, RoleDto>(Service.Create(_mapper.Map<RoleDto, Role>(data))));
             }
             catch (Exception ex)
             {
@@ -106,13 +95,12 @@ namespace CRM_MFSR_API.Controllers
         /// <param name="data">data to update.</param>
         /// <returns>Record updated.</returns>
         [HttpPut("Update")]
-        [Authorize]
-        public ActionResult<UserDto> Update(UpdateRequest data)
+        public ActionResult<RoleDto> Update(RoleDto data)
         {
             try
             {
 
-                return Ok(_mapper.Map<User, UserDto>(Service.Update(data.ToUserEntity())));
+                return Ok(_mapper.Map<Role, RoleDto>(Service.Update(_mapper.Map<RoleDto, Role>(data))));
             }
             catch (Exception ex)
             {
@@ -126,7 +114,6 @@ namespace CRM_MFSR_API.Controllers
         /// <param name="deletedBy">person who deactivate the record.</param>
         /// <returns>void.</returns>
         [HttpDelete("Delete")]
-        [Authorize]
         public ActionResult Delete(Guid id, string deletedBy)
         {
             try
@@ -138,42 +125,6 @@ namespace CRM_MFSR_API.Controllers
             {
                 return BadRequest(new ErrorResponse { Message = $"Could not delete: {ex.Message}" });
             }
-        }
-
-        /// <summary>
-        /// Login method.
-        /// </summary>
-        /// <param name="email">provided email.</param>
-        /// <param name="password">provided password.</param>
-        /// <returns>String token if login is correct.</returns>
-        [HttpPost("Login")]
-        public ActionResult<LoginResponse> ValidateLogin(string email, string password)
-        {
-            try
-            {
-                string path = Directory.GetCurrentDirectory() + @"\appsettings.json";
-                string configuration = new ConfigurationBuilder().AddJsonFile(path).Build().GetSection("Jwt").GetChildren().ToJson();
-                User userGetted = Service.ValidateLogin(email, password);
-                LoginResponse response = new(TokenHelper.GenerateToken(userGetted, configuration));
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return Forbid(Json(new ErrorResponse { Message = ex.Message }).ToString() ?? "");
-            }
-        }
-
-        /// <summary>
-        /// Validates data of authenticated user.
-        /// </summary>
-        /// <param name="contextAccessor">context accessor.</param>
-        /// <returns>Token data.</returns>
-        [HttpGet("GetAccessData")]
-        [Authorize]
-        public ActionResult Validate(IHttpContextAccessor contextAccessor)
-        {
-            ClaimsPrincipal user = contextAccessor.HttpContext.User;
-            return Ok(TokenHelper.ValidateToken(user));
         }
     }
 }

@@ -59,7 +59,7 @@ namespace Repositories.Implementations
         /// <returns>User data.</returns>
         public new User GetById(Guid id)
         {
-            return Context.Users.Include(x => x.UserRoles).ThenInclude(x => x.Role).FirstOrDefault(x => x.Id == id) ?? throw new Exception($"User with ID {id} was not found.");
+            return Context.Users.Include(x => x.UserRoles).FirstOrDefault(x => x.Id == id) ?? throw new Exception($"User with ID {id} was not found.");
         }
 
         /// <summary>
@@ -140,7 +140,8 @@ namespace Repositories.Implementations
             {
                 User? data = Context.Users
                     .Include(x => x.UserRoles)
-                    .ThenInclude(x=> x.Role)
+                    .ThenInclude(x => x.Role)
+                    .ThenInclude(x=>x.Permissions)
                     .FirstOrDefault(x => EF.Functions.Collate(x.Email, "SQL_Latin1_General_CP1_CS_AS") == email && EF.Functions.Collate(x.Password, "SQL_Latin1_General_CP1_CS_AS") == password && x.IsActive);
                 return data ?? throw new Exception("Email/Password was incorrect.");
             }
@@ -151,14 +152,22 @@ namespace Repositories.Implementations
         }
 
         /// <summary>
-        /// Determinates if the user has an especific role.
+        /// Get all user permissions.
         /// </summary>
         /// <param name="userId">User ID</param>
-        /// <param name="roleId">Role ID to validate.</param>
-        /// <returns>true if the user has the role, false if not.</returns>
-        public bool HasRole(Guid userId, Guid roleId)
+        /// <returns>Permission list.</returns>
+        public List<Permission> GetPermissions(Guid userId)
         {
-            return GetById(userId).UserRoles?.FirstOrDefault(x => x.RoleId == roleId && x.IsActive) != null;
+            List<Permission> permissions = new List<Permission>();
+            User user = GetById(userId);
+            foreach(UserRole userRole in user.UserRoles)
+            {
+                foreach(Permission permission in userRole.Role.Permissions)
+                {
+                    permissions.Add(permission);
+                }
+            }
+            return permissions;
         }
     }
 }
