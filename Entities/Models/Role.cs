@@ -21,5 +21,9 @@ namespace Entities.Models
         /// User Roles.
         /// </summary>
         public virtual List<UserRole>? UserRoles { get; set; }
+        /// <summary>
+        /// Permissions per role.
+        /// </summary>
+        public virtual List<RolePermission>? RolePermissions { get; set; }
     }
 }

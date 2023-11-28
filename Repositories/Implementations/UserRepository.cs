@@ -59,7 +59,7 @@ namespace Repositories.Implementations
         /// <returns>User data.</returns>
         public new User GetById(Guid id)
         {
-            return Context.Users.Include(x => x.UserRoles).ThenInclude(x => x.Role).FirstOrDefault(x => x.Id == id) ?? throw new Exception($"User with ID {id} was not found.");
+            return Context.Users.Include(x => x.UserRoles).FirstOrDefault(x => x.Id == id) ?? throw new Exception($"User with ID {id} was not found.");
         }
 
         /// <summary>
@@ -82,10 +82,13 @@ namespace Repositories.Implementations
                     user.LastUpdatedBy = entity.LastUpdatedBy;
                     user.LastUpdatedAt = entity.LastUpdatedAt;
                     Context.Users.Update(user);
-                    Context.UserRoles.Where(x => x.UserId == entity.Id).ExecuteDelete();
-                    foreach (UserRole role in entity.UserRoles)
+                    if(entity.UserRoles!= null)
                     {
-                        Context.UserRoles.Add(role);
+                        Context.UserRoles.Where(x => x.UserId == entity.Id).ExecuteDelete();
+                        foreach (UserRole role in entity.UserRoles)
+                        {
+                            Context.UserRoles.Add(role);
+                        }
                     }
                     Context.SaveChanges();
                     //get the updated user.
@@ -140,7 +143,6 @@ namespace Repositories.Implementations
             {
                 User? data = Context.Users
                     .Include(x => x.UserRoles)
-                    .ThenInclude(x=> x.Role)
                     .FirstOrDefault(x => EF.Functions.Collate(x.Email, "SQL_Latin1_General_CP1_CS_AS") == email && EF.Functions.Collate(x.Password, "SQL_Latin1_General_CP1_CS_AS") == password && x.IsActive);
                 return data ?? throw new Exception("Email/Password was incorrect.");
             }
@@ -148,17 +150,6 @@ namespace Repositories.Implementations
             {
                 throw;
             }
-        }
-
-        /// <summary>
-        /// Determinates if the user has an especific role.
-        /// </summary>
-        /// <param name="userId">User ID</param>
-        /// <param name="roleId">Role ID to validate.</param>
-        /// <returns>true if the user has the role, false if not.</returns>
-        public bool HasRole(Guid userId, Guid roleId)
-        {
-            return GetById(userId).UserRoles?.FirstOrDefault(x => x.RoleId == roleId && x.IsActive) != null;
         }
     }
 }

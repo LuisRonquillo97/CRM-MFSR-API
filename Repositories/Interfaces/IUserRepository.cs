@@ -1,4 +1,6 @@
-﻿namespace Repositories.Interfaces
+﻿using Entities.Models;
+
+namespace Repositories.Interfaces
 {
     /// <summary>
     /// Interface for role repository.
@@ -14,13 +16,5 @@
         /// <param name="password">password.</param>
         /// <returns>User data.</returns>
         T ValidateLogin(string email, string password);
-
-        /// <summary>
-        /// Determinate if the provided user has an especific role.
-        /// </summary>
-        /// <param name="userId">User ID.</param>
-        /// <param name="roleId">Role ID.</param>
-        /// <returns>Determinating boolean</returns>
-        bool HasRole(Guid userId, Guid roleId);
     }
 }

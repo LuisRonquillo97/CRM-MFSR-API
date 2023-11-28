@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SQLDB.Context;
 
@@ -11,9 +12,11 @@ using SQLDB.Context;
 namespace SQLDB.Migrations
 {
     [DbContext(typeof(SqlContext))]
-    partial class SqlContextModelSnapshot : ModelSnapshot
+    [Migration("20231127222317_RolePermissions")]
+    partial class RolePermissions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,16 +48,14 @@ namespace SQLDB.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<string>("Key")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("LastUpdatedAt")
                         .HasColumnType("datetime2");
@@ -65,21 +66,17 @@ namespace SQLDB.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Key")
-                        .IsUnique();
 
                     b.ToTable("Permissions");
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("335bdf65-8603-47ca-ba68-4c13d84fd23f"),
-                            CreatedAt = new DateTime(2023, 11, 28, 17, 24, 39, 69, DateTimeKind.Utc).AddTicks(723),
+                            Id = new Guid("04e0e210-bd83-40d3-8610-4d671991bbd8"),
+                            CreatedAt = new DateTime(2023, 11, 27, 22, 23, 16, 524, DateTimeKind.Utc).AddTicks(7293),
                             CreatedBy = "MainSeed",
                             Description = "See all users for the role Admin.",
                             IsActive = true,
@@ -88,13 +85,13 @@ namespace SQLDB.Migrations
                         },
                         new
                         {
-                            Id = new Guid("fd6017b3-efcf-4a2d-b1f2-4d92c190c4db"),
-                            CreatedAt = new DateTime(2023, 11, 28, 17, 24, 39, 69, DateTimeKind.Utc).AddTicks(736),
+                            Id = new Guid("0d585130-d133-43ba-a726-5604ddaa81de"),
+                            CreatedAt = new DateTime(2023, 11, 27, 22, 23, 16, 524, DateTimeKind.Utc).AddTicks(7297),
                             CreatedBy = "MainSeed",
-                            Description = "Create users.",
+                            Description = "CRUD users. Only for the role Admin.",
                             IsActive = true,
-                            Key = "User.Create",
-                            Name = "Create users"
+                            Key = "User.Crud",
+                            Name = "CRUD users"
                         });
                 });
 
@@ -149,8 +146,8 @@ namespace SQLDB.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("7a140337-39ee-4f01-aa97-160cd718cd26"),
-                            CreatedAt = new DateTime(2023, 11, 28, 11, 24, 39, 69, DateTimeKind.Local).AddTicks(690),
+                            Id = new Guid("baa6230e-bb80-4952-b156-45e127f1d511"),
+                            CreatedAt = new DateTime(2023, 11, 27, 16, 23, 16, 524, DateTimeKind.Local).AddTicks(7267),
                             CreatedBy = "mainSeed",
                             Description = "Has full permissions.",
                             IsActive = true,
@@ -206,21 +203,21 @@ namespace SQLDB.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("355dd94c-d96d-420b-bb2c-68249ccdf787"),
-                            CreatedAt = new DateTime(2023, 11, 28, 11, 24, 39, 69, DateTimeKind.Local).AddTicks(762),
+                            Id = new Guid("1094bade-087b-4eca-b0c3-c0bc47e52b7a"),
+                            CreatedAt = new DateTime(2023, 11, 27, 16, 23, 16, 524, DateTimeKind.Local).AddTicks(7316),
                             CreatedBy = "",
                             IsActive = true,
-                            PermissionId = new Guid("335bdf65-8603-47ca-ba68-4c13d84fd23f"),
-                            RoleId = new Guid("7a140337-39ee-4f01-aa97-160cd718cd26")
+                            PermissionId = new Guid("04e0e210-bd83-40d3-8610-4d671991bbd8"),
+                            RoleId = new Guid("baa6230e-bb80-4952-b156-45e127f1d511")
                         },
                         new
                         {
-                            Id = new Guid("e682a05f-51b9-47a6-9629-5d369193c8aa"),
-                            CreatedAt = new DateTime(2023, 11, 28, 11, 24, 39, 69, DateTimeKind.Local).AddTicks(767),
+                            Id = new Guid("742530ea-2432-4bc0-b938-e3f14645a676"),
+                            CreatedAt = new DateTime(2023, 11, 27, 16, 23, 16, 524, DateTimeKind.Local).AddTicks(7319),
                             CreatedBy = "",
                             IsActive = true,
-                            PermissionId = new Guid("fd6017b3-efcf-4a2d-b1f2-4d92c190c4db"),
-                            RoleId = new Guid("7a140337-39ee-4f01-aa97-160cd718cd26")
+                            PermissionId = new Guid("0d585130-d133-43ba-a726-5604ddaa81de"),
+                            RoleId = new Guid("baa6230e-bb80-4952-b156-45e127f1d511")
                         });
                 });
 
@@ -285,8 +282,8 @@ namespace SQLDB.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("9667c42e-e7ee-460e-8253-408e02b934f6"),
-                            CreatedAt = new DateTime(2023, 11, 28, 11, 24, 39, 69, DateTimeKind.Local).AddTicks(490),
+                            Id = new Guid("3fac7eef-44f2-4f7b-bd6b-8f6457248865"),
+                            CreatedAt = new DateTime(2023, 11, 27, 16, 23, 16, 524, DateTimeKind.Local).AddTicks(7116),
                             CreatedBy = "mainSeed",
                             Email = "admin@mail.com",
                             FirstName = "First",
@@ -344,12 +341,12 @@ namespace SQLDB.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("16e7f2f6-13ea-47bf-af08-304844fdad03"),
-                            CreatedAt = new DateTime(2023, 11, 28, 17, 24, 39, 69, DateTimeKind.Utc).AddTicks(801),
+                            Id = new Guid("f7948c9b-bac2-4795-8fab-e66ff1c57d48"),
+                            CreatedAt = new DateTime(2023, 11, 27, 22, 23, 16, 524, DateTimeKind.Utc).AddTicks(7344),
                             CreatedBy = "mainSeed",
                             IsActive = true,
-                            RoleId = new Guid("7a140337-39ee-4f01-aa97-160cd718cd26"),
-                            UserId = new Guid("9667c42e-e7ee-460e-8253-408e02b934f6")
+                            RoleId = new Guid("baa6230e-bb80-4952-b156-45e127f1d511"),
+                            UserId = new Guid("3fac7eef-44f2-4f7b-bd6b-8f6457248865")
                         });
                 });
 

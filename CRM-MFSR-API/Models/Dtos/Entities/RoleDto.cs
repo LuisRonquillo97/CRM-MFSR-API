@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Entities.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace CRM_MFSR_API.Models.Dtos.Entities
 {
@@ -21,5 +22,9 @@ namespace CRM_MFSR_API.Models.Dtos.Entities
         /// User Roles.
         /// </summary>
         public virtual List<UserRoleDto>? UserRoles { get; set; }
+        /// <summary>
+        /// Permissions per role.
+        /// </summary>
+        public virtual List<RolePermissionDto>? RolePermissions { get; set; }
     }
 }

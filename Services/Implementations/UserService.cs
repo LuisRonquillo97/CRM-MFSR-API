@@ -2,6 +2,7 @@
 using Repositories.Implementations;
 using Services.Interfaces;
 using SQLDB.Context;
+using SQLDB.Migrations;
 
 namespace Services.Implementations
 {
@@ -73,17 +74,6 @@ namespace Services.Implementations
         public User Update(User entity)
         {
             return Repository.Update(entity);
-        }
-
-        /// <summary>
-        /// Determinates if an especific user, has an especific role.
-        /// </summary>
-        /// <param name="userId">User ID.</param>
-        /// <param name="roleId">Role ID.</param>
-        /// <returns>boolean.</returns>
-        public bool HasRole(Guid userId, Guid roleId)
-        {
-            return Repository.HasRole(userId, roleId);
         }
 
         /// <summary>

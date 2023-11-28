@@ -16,14 +16,6 @@ namespace Services.Interfaces
         public UserRepository Repository { get; set; }
 
         /// <summary>
-        /// Determinates if an especific user, has an especific role.
-        /// </summary>
-        /// <param name="userId">User ID.</param>
-        /// <param name="roleId">Role ID.</param>
-        /// <returns>boolean.</returns>
-        public bool HasRole(Guid userId, Guid roleId);
-
-        /// <summary>
         /// Login method.
         /// </summary>
         /// <param name="email">email.</param>
