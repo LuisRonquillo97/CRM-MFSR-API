@@ -43,6 +43,7 @@ namespace CRM_MFSR_API.Controllers
         /// <param name="id">UUID.</param>
         /// <returns>role data.</returns>
         [HttpGet("GetById")]
+        [Authorize(Policy = "Role.See")]
         public ActionResult<RoleDto> GetById(Guid id)
         {
             try
@@ -61,6 +62,7 @@ namespace CRM_MFSR_API.Controllers
         /// <param name="filters">Query.</param>
         /// <returns>Matching users.</returns>
         [HttpPost("Search")]
+        [Authorize(Policy = "Role.See")]
         public ActionResult<List<RoleDto>> Search(RoleDto filters)
         {
             try
@@ -78,6 +80,7 @@ namespace CRM_MFSR_API.Controllers
         /// <param name="data">Data to save.</param>
         /// <returns>Record added.</returns>
         [HttpPost("Create")]
+        [Authorize(Policy = "Role.Create")]
         public ActionResult<RoleDto> Create(RoleDto data)
         {
             try
@@ -95,6 +98,7 @@ namespace CRM_MFSR_API.Controllers
         /// <param name="data">data to update.</param>
         /// <returns>Record updated.</returns>
         [HttpPut("Update")]
+        [Authorize(Policy = "Role.Update")]
         public ActionResult<RoleDto> Update(RoleDto data)
         {
             try
@@ -114,6 +118,7 @@ namespace CRM_MFSR_API.Controllers
         /// <param name="deletedBy">person who deactivate the record.</param>
         /// <returns>void.</returns>
         [HttpDelete("Delete")]
+        [Authorize(Policy = "Role.Delete")]
         public ActionResult Delete(Guid id, string deletedBy)
         {
             try

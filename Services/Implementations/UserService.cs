@@ -86,10 +86,5 @@ namespace Services.Implementations
         {
             return Repository.ValidateLogin(email, password);
         }
-
-        public List<Permission> GetPermissions(Guid userId)
-        {
-            return Repository.GetPermissions(userId);
-        }
     }
 }

@@ -16,13 +16,6 @@ namespace Services.Interfaces
         public UserRepository Repository { get; set; }
 
         /// <summary>
-        /// Gets all user permissions.
-        /// </summary>
-        /// <param name="userId">User ID.</param>
-        /// <returns>permission list.</returns>
-        public List<Permission> GetPermissions(Guid userId);
-
-        /// <summary>
         /// Login method.
         /// </summary>
         /// <param name="email">email.</param>

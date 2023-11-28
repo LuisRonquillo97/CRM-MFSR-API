@@ -1,27 +1,27 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Entities.Models;
 
-namespace Entities.Models
+namespace CRM_MFSR_API.Models.Dtos.Entities
 {
-    public class Permission : BaseAttributes
+    /// <summary>
+    /// Permission DTO.
+    /// </summary>
+    public class PermissionDto : BaseEntityDTO
     {
         /// <summary>
         /// Permission internal key.
         /// </summary>
-        [MaxLength(50)]
         public string Key { get; set; } = string.Empty;
         /// <summary>
         /// Permission name.
         /// </summary>
-        [MaxLength(50)]
         public string Name { get; set; } = string.Empty;
         /// <summary>
         /// Permission description.
         /// </summary>
-        [MaxLength (250)]
         public string Description { get; set; } = string.Empty;
         /// <summary>
         /// Role entity relation.
         /// </summary>
-        public virtual List<RolePermission>? RolePermissions { get; set; }
+        public virtual List<RolePermissionDto>? RolePermissions { get; set; }
     }
 }

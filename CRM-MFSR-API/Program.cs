@@ -1,13 +1,15 @@
 using CRM_MFSR_API.MappingProfiles.EntitiesDto;
 using Entities.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Security.Handlers;
+using Security.Requirements;
 using Services.Implementations;
 using Services.Interfaces;
 using SQLDB.Context;
-using System.Security.Claims;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -78,8 +80,18 @@ builder.Services.AddAutoMapper(typeof(EntitiesDtoProfile));
 //JWT Token security.
 builder.Services
     .AddHttpContextAccessor()
-    .AddAuthorization(x=> {
-        //x.AddPolicy("UserSee", policy=> policy.RequireClaim("Permission","User.See"));
+    .AddAuthorization(x =>
+    {
+        //Create the DB Context options
+        var optionsBuilder = new DbContextOptionsBuilder<SqlContext>()
+            .UseSqlServer(connection);
+
+        //Create a new database context
+        var context = new SqlContext(optionsBuilder.Options);
+        foreach (var permission in context.Permissions.Where(x => x.IsActive).ToList())
+        {
+            x.AddPolicy(permission.Key, policy => policy.Requirements.Add(new ByNameRequirement(permission.Key)));
+        }
     })
     .AddAuthentication(x =>
     {
@@ -98,6 +110,8 @@ builder.Services
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? ""))
         };
     });
+
+builder.Services.AddScoped<IAuthorizationHandler, ByNameHandler>();
 
 var app = builder.Build();
 AppContext.SetSwitch("System.Globalization.Invariant", true);

@@ -28,6 +28,10 @@ namespace SQLDB.Context
         /// Permissions entity.
         /// </summary>
         public DbSet<Permission> Permissions { get; set; }
+        /// <summary>
+        /// Role permissions entity.
+        /// </summary>
+        public DbSet<RolePermission> RolePermissions { get; set; }
 
         /// <summary>
         /// Actions to be performed when models are being created
@@ -38,6 +42,7 @@ namespace SQLDB.Context
             #region Indexes
             modelBuilder.Entity<User>().HasIndex(x => x.Email).IsUnique();
             modelBuilder.Entity<Role>().HasIndex(x => x.Name).IsUnique();
+            modelBuilder.Entity<Permission>().HasIndex(x=>x.Key).IsUnique();
             #endregion
             #region Relationships
             //userRoles with roles
@@ -45,13 +50,15 @@ namespace SQLDB.Context
             //userRoles with users
             modelBuilder.Entity<UserRole>().HasOne(x => x.User).WithMany(x => x.UserRoles).HasForeignKey(x => x.UserId).HasPrincipalKey(x => x.Id);
             //roles with permissions
-            modelBuilder.Entity<Permission>().HasOne(x => x.Role).WithMany(x => x.Permissions).HasForeignKey(x => x.IdRole).HasPrincipalKey(x => x.Id);
+            modelBuilder.Entity<RolePermission>().HasOne(x => x.Role).WithMany(x => x.RolePermissions).HasForeignKey(x => x.RoleId).HasPrincipalKey(x => x.Id);
+            modelBuilder.Entity<RolePermission>().HasOne(x => x.Permission).WithMany(x => x.RolePermissions).HasForeignKey(x => x.PermissionId).HasPrincipalKey(x => x.Id);
             #endregion
             #region seeds
             //base values
             Guid roleId = Guid.NewGuid();
             Guid userId = Guid.NewGuid();
-            Guid permissionId = Guid.NewGuid();
+            Guid seeAllUsersPermissionId = Guid.NewGuid();
+            Guid crudUsersPermissionId = Guid.NewGuid();
             string createdBy = "mainSeed";
             //first user role.
             modelBuilder.Entity<User>().HasData(new User
@@ -72,6 +79,39 @@ namespace SQLDB.Context
                 CreatedAt = DateTime.Now,
                 CreatedBy = createdBy
             });
+            modelBuilder.Entity<Permission>().HasData([
+                new Permission
+                {
+                    Id = seeAllUsersPermissionId,
+                    Name = "See users",
+                    Description = "See all users for the role Admin.",
+                    Key = "User.See",
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = "MainSeed",
+                    IsActive = true
+                },
+                new Permission
+                {
+                    Id = crudUsersPermissionId,
+                    Name = "Create users",
+                    Description = "Create users.",
+                    Key = "User.Create",
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = "MainSeed",
+                    IsActive = true
+                },
+            ]);
+            modelBuilder.Entity<RolePermission>().HasData(new RolePermission
+            {
+                Id = Guid.NewGuid(),
+                RoleId = roleId,
+                PermissionId = seeAllUsersPermissionId
+            }, new RolePermission
+            {
+                Id = Guid.NewGuid(),
+                RoleId = roleId,
+                PermissionId = crudUsersPermissionId
+            });
             modelBuilder.Entity<UserRole>().HasData(
                 new UserRole
                 {
@@ -82,30 +122,7 @@ namespace SQLDB.Context
                     CreatedBy = createdBy
                 }
                 );
-            modelBuilder.Entity<Permission>().HasData([
-                new Permission
-                {
-                    Id = permissionId,
-                    Name = "See users",
-                    Description = "See all users for the role Admin.",
-                    Key = "User.See",
-                    CreatedAt = DateTime.UtcNow,
-                    CreatedBy = "MainSeed",
-                    IdRole = roleId,
-                    IsActive = true
-                },
-                new Permission
-                {
-                    Id = permissionId,
-                    Name = "CRUD users",
-                    Description = "CRUD users. Only for the role Admin.",
-                    Key = "User.Crud",
-                    CreatedAt = DateTime.UtcNow,
-                    CreatedBy = "MainSeed",
-                    IdRole = roleId,
-                    IsActive = true
-                },
-            ]);
+
             #endregion
         }
     }

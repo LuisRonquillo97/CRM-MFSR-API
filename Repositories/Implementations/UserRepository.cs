@@ -82,10 +82,13 @@ namespace Repositories.Implementations
                     user.LastUpdatedBy = entity.LastUpdatedBy;
                     user.LastUpdatedAt = entity.LastUpdatedAt;
                     Context.Users.Update(user);
-                    Context.UserRoles.Where(x => x.UserId == entity.Id).ExecuteDelete();
-                    foreach (UserRole role in entity.UserRoles)
+                    if(entity.UserRoles!= null)
                     {
-                        Context.UserRoles.Add(role);
+                        Context.UserRoles.Where(x => x.UserId == entity.Id).ExecuteDelete();
+                        foreach (UserRole role in entity.UserRoles)
+                        {
+                            Context.UserRoles.Add(role);
+                        }
                     }
                     Context.SaveChanges();
                     //get the updated user.
@@ -140,8 +143,6 @@ namespace Repositories.Implementations
             {
                 User? data = Context.Users
                     .Include(x => x.UserRoles)
-                    .ThenInclude(x => x.Role)
-                    .ThenInclude(x=>x.Permissions)
                     .FirstOrDefault(x => EF.Functions.Collate(x.Email, "SQL_Latin1_General_CP1_CS_AS") == email && EF.Functions.Collate(x.Password, "SQL_Latin1_General_CP1_CS_AS") == password && x.IsActive);
                 return data ?? throw new Exception("Email/Password was incorrect.");
             }
@@ -149,25 +150,6 @@ namespace Repositories.Implementations
             {
                 throw;
             }
-        }
-
-        /// <summary>
-        /// Get all user permissions.
-        /// </summary>
-        /// <param name="userId">User ID</param>
-        /// <returns>Permission list.</returns>
-        public List<Permission> GetPermissions(Guid userId)
-        {
-            List<Permission> permissions = new List<Permission>();
-            User user = GetById(userId);
-            foreach(UserRole userRole in user.UserRoles)
-            {
-                foreach(Permission permission in userRole.Role.Permissions)
-                {
-                    permissions.Add(permission);
-                }
-            }
-            return permissions;
         }
     }
 }

@@ -1,15 +1,11 @@
 ﻿using AutoMapper;
 using CRM_MFSR_API.Models.Dtos.Entities;
-using CRM_MFSR_API.Models.Dtos.Security;
 using CRM_MFSR_API.Models.Request.User;
 using CRM_MFSR_API.Models.Responses;
 using CRM_MFSR_API.Models.Responses.Security;
-using CRM_MFSR_API.Models.Responses.User;
 using Entities.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using NuGet.Protocol;
 using Security.Helpers;
 using Services.Interfaces;
@@ -52,6 +48,7 @@ namespace CRM_MFSR_API.Controllers
         /// <returns>User data.</returns>
         [HttpGet("GetById")]
         [Authorize]
+        [Authorize(Policy = "User.See")]
         public ActionResult<UserDto> GetById(Guid id)
         {
             try
@@ -71,6 +68,7 @@ namespace CRM_MFSR_API.Controllers
         /// <returns>Matching users.</returns>
         [HttpPost("Search")]
         [Authorize]
+        [Authorize(Policy = "User.See")]
         public ActionResult<List<UserDto>> Search(SearchRequest filters)
         {
             try
@@ -89,6 +87,7 @@ namespace CRM_MFSR_API.Controllers
         /// <returns>Record added.</returns>
         [HttpPost("Create")]
         [Authorize]
+        [Authorize(Policy = "User.Create")]
         public ActionResult<UserDto> Create(CreateRequest data)
         {
             try
@@ -107,6 +106,7 @@ namespace CRM_MFSR_API.Controllers
         /// <returns>Record updated.</returns>
         [HttpPut("Update")]
         [Authorize]
+        [Authorize(Policy = "User.Update")]
         public ActionResult<UserDto> Update(UpdateRequest data)
         {
             try
@@ -127,6 +127,7 @@ namespace CRM_MFSR_API.Controllers
         /// <returns>void.</returns>
         [HttpDelete("Delete")]
         [Authorize]
+        [Authorize(Policy = "User.Delete")]
         public ActionResult Delete(Guid id, string deletedBy)
         {
             try
@@ -169,7 +170,6 @@ namespace CRM_MFSR_API.Controllers
         /// <param name="contextAccessor">context accessor.</param>
         /// <returns>Token data.</returns>
         [HttpGet("GetAccessData")]
-        [Authorize]
         public ActionResult Validate(IHttpContextAccessor contextAccessor)
         {
             ClaimsPrincipal user = contextAccessor.HttpContext.User;
