@@ -1,6 +1,6 @@
-﻿using Entities.Models;
-using Repositories.Interfaces;
+﻿using Entities.Models.Users;
 using Microsoft.EntityFrameworkCore;
+using Repositories.Interfaces;
 using SQLDB.Context;
 
 namespace Repositories.Implementations
@@ -8,34 +8,24 @@ namespace Repositories.Implementations
     /// <summary>
     /// Role repository. Inherits from BaseRepository
     /// </summary>
-    public class RoleRepository : BaseRepository<Role>, IRoleRepository<Role>
+    /// <remarks>
+    /// Constructor.
+    /// </remarks>
+    /// <param name="context">DB Context.</param>
+    public class RoleRepository(SqlContext context) : BaseRepository<Role>(context), IRoleRepository
     {
-        /// <summary>
-        /// DB Context.
-        /// </summary>
-        private SqlContext Context { get; set; }
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="context">DB Context.</param>
-        public RoleRepository(SqlContext context) : base(context)
-        {
-            Context = context;
-        }
-
         /// <summary>
         /// Updates data from a role already-saved record.
         /// </summary>
         /// <remarks>Also saves all permissions that the role have.</remarks>
         /// <param name="entity">Data to update from the role.</param>
         /// <returns>Role updated.</returns>
-        public new Role Update(Role entity)
+        public override Role Update(Role entity)
         {
             try
             {
                 Role actualRole = this.GetById(entity.Id);
-                if(actualRole != null)
+                if (actualRole != null)
                 {
                     actualRole.Name = entity.Name;
                     actualRole.Description = entity.Description;
@@ -68,9 +58,9 @@ namespace Repositories.Implementations
         /// </summary>
         /// <param name="id">Role id.</param>
         /// <returns>Role and permissions.</returns>
-        public new Role GetById(Guid id)
+        public override Role GetById(Guid id)
         {
-            return Context.Roles.Include(x=>x.RolePermissions).ThenInclude(x=>x.Permission).FirstOrDefault(x => x.Id.Equals(id));
+            return Context.Roles.Include(x => x.RolePermissions).ThenInclude(x => x.Permission).First(x => x.Id.Equals(id) && x.IsActive);
         }
 
         /// <summary>
@@ -78,13 +68,17 @@ namespace Repositories.Implementations
         /// </summary>
         /// <param name="filter">Role search to filter.</param>
         /// <returns>List of roles matching the search query.</returns>
-        public new List<Role> GetAll(Role filter)
+        public override List<Role> GetAll(Role filter)
         {
-            return Context.Roles.Include(x=>x.RolePermissions)
-                .Where(x => 
-                x.IsActive && (x.Name.Contains(filter.Name) || 
-                x.Description.Contains(filter.Description)))
-                .ToList();
+            return
+            [
+                .. Context.Roles
+                                .Where(x =>
+                                x.IsActive && 
+                                x.Name.Contains(filter.Name) &&
+                                x.Description.Contains(filter.Description)
+                                )
+            ];
         }
 
         /// <summary>
@@ -92,17 +86,18 @@ namespace Repositories.Implementations
         /// </summary>
         /// <param name="id">Role Id.</param>
         /// <param name="deletedBy">Person who deactivates the role.</param>
-        public new void Delete(Guid id, string deletedBy)
+        public override void Delete(Guid id, string deletedBy)
         {
             try
             {
                 Role entity = GetById(id);
-                if(entity != null)
+                if (entity != null)
                 {
                     entity.IsActive = false;
                     entity.DeactivatedAt = DateTime.Now;
                     entity.DeactivatedBy = deletedBy;
-                    entity.RolePermissions.ForEach(x => {
+                    entity.RolePermissions?.ForEach(x =>
+                    {
                         x.IsActive = false;
                         x.DeactivatedAt = DateTime.Now;
                         x.DeactivatedBy = deletedBy;
@@ -114,7 +109,7 @@ namespace Repositories.Implementations
                 {
                     throw new Exception($"The role with ID \"{id}\" was not found.");
                 }
-                
+
             }
             catch (Exception)
             {

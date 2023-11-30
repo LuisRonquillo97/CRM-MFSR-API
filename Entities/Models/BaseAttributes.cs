@@ -10,6 +10,7 @@ namespace Entities.Models
         /// <summary>
         /// UUID from the entity.
         /// </summary>
+        [Key]
         public Guid Id { get; set; } = Guid.NewGuid();
         /// <summary>
         /// Determinates if the record is active.

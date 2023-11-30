@@ -1,4 +1,4 @@
-﻿using Entities.Models;
+﻿using Entities.Models.Users;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Security.Models;

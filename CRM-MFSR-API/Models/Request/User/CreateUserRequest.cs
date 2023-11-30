@@ -1,16 +1,12 @@
-﻿using Entities.Models;
+﻿using Entities.Models.Users;
 
 namespace CRM_MFSR_API.Models.Request.User
 {
     /// <summary>
-    /// Data to use when you call /api/User/Update.
+    /// Data to use when you call /api/User/Create.
     /// </summary>
-    public class UpdateRequest
+    public class CreateUserRequest
     {
-        /// <summary>
-        /// Current user ID.
-        /// </summary>
-        public required Guid Id { get; set; }
         /// <summary>
         /// User first name.
         /// </summary>
@@ -24,30 +20,34 @@ namespace CRM_MFSR_API.Models.Request.User
         /// </summary>
         public required string Email { get; set; }
         /// <summary>
-        /// User password.
+        /// User Password.
         /// </summary>
         public required string Password { get; set; }
         /// <summary>
-        /// Person who updated the user.
+        /// Person who creates the user.
         /// </summary>
-        public required string UpdatedBy { get; set; }
+        public required string CreatedBy { get; set; }
         /// <summary>
-        /// Role ID list.
+        /// Role id's from his roles.
         /// </summary>
         public required List<Guid> RoleIds { get; set; }
-        public Entities.Models.User ToUserEntity()
+        /// <summary>
+        /// Transform this class to User Entity.
+        /// </summary>
+        /// <returns>User Entity</returns>
+        public Entities.Models.Users.User ToUserEntity()
         {
+            Guid id = Guid.NewGuid();
             List<UserRole> roles = [];
-            this.RoleIds.ForEach(x => roles.Add(new UserRole { RoleId = x, UserId = this.Id, CreatedBy = this.UpdatedBy, LastUpdatedAt = DateTime.Now, LastUpdatedBy = this.UpdatedBy }));
-            return new Entities.Models.User
+            this.RoleIds.ForEach(x => roles.Add(new UserRole { RoleId = x, UserId = id, CreatedBy = this.CreatedBy }));
+            return new Entities.Models.Users.User
             {
-                Id = this.Id,
+                Id = id,
                 FirstName = this.FirstName,
                 LastName = this.LastName,
                 Email = this.Email,
                 Password = this.Password,
-                LastUpdatedAt = DateTime.Now,
-                LastUpdatedBy = this.UpdatedBy,
+                CreatedBy = this.CreatedBy,
                 UserRoles = roles
             };
         }

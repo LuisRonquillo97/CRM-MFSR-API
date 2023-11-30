@@ -5,7 +5,7 @@ namespace CRM_MFSR_API.Models.Request.User
     /// <summary>
     /// Data to use when you call /api/User/Search.
     /// </summary>
-    public class SearchRequest
+    public class SearchUserRequest
     {
         /// <summary>
         /// User email.
@@ -26,10 +26,13 @@ namespace CRM_MFSR_API.Models.Request.User
         /// Role IDs from user.
         /// </summary>
         public List<Guid>? RoleIds { get; set; } = new List<Guid>();
-
-        public Entities.Models.User ToUserEntity()
+        /// <summary>
+        /// Convert this request to User entity.
+        /// </summary>
+        /// <returns></returns>
+        public Entities.Models.Users.User ToUserEntity()
         {
-            return new Entities.Models.User
+            return new Entities.Models.Users.User
             {
                 Email = this.Email,
                 FirstName = this.FirstName,

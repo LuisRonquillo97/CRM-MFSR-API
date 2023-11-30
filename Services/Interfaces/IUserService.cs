@@ -1,4 +1,5 @@
 ﻿using Entities.Models;
+using Entities.Models.Users;
 using Repositories.Implementations;
 
 namespace Services.Interfaces
@@ -7,14 +8,9 @@ namespace Services.Interfaces
     /// User service interface.
     /// </summary>
     /// <remarks>Inherits from IBaseService.</remarks>
-    /// <typeparam name="T">Model BaseAttributes, or any of its inherits</typeparam>
-    public interface IUserService<T> : IBaseService<T> where T : BaseAttributes
+    /// <typeparam name="T">Base repository, or any of its inherits</typeparam>
+    public interface IUserService : IBaseService<User, UserRepository>
     {
-        /// <summary>
-        /// User Repository to interact with DB.
-        /// </summary>
-        public UserRepository Repository { get; set; }
-
         /// <summary>
         /// Login method.
         /// </summary>

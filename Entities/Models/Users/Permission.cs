@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Entities.Models
+namespace Entities.Models.Users
 {
     public class Permission : BaseAttributes
     {
@@ -17,7 +17,7 @@ namespace Entities.Models
         /// <summary>
         /// Permission description.
         /// </summary>
-        [MaxLength (250)]
+        [MaxLength(250)]
         public string Description { get; set; } = string.Empty;
         /// <summary>
         /// Role entity relation.

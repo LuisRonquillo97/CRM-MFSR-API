@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Entities.Models
+namespace Entities.Models.Users
 {
     /// <summary>
     /// Role Entity.

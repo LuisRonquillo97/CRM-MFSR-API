@@ -1,5 +1,5 @@
 using CRM_MFSR_API.MappingProfiles.EntitiesDto;
-using Entities.Models;
+using Entities.Models.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -65,8 +65,8 @@ string connection = new ConfigurationBuilder().AddJsonFile(path: Directory.GetCu
 builder.Services.AddDbContext<SqlContext>(options => options.UseSqlServer(connection));
 
 // Add services to the container.
-builder.Services.AddTransient<IUserService<User>, UserService>();
-builder.Services.AddTransient<IRoleService<Role>, RoleService>();
+builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IRoleService, RoleService>();
 
 //controllers
 builder.Services.AddControllers().AddJsonOptions(options =>
