@@ -10,11 +10,11 @@ namespace CRM_MFSR_API.Models.Request.Stage
         /// <summary>
         /// Filter by date. Max date filter.
         /// </summary>
-        public DateTime ReleaseDateEnd { get; set; } = DateTime.MaxValue;
+        public DateTime EndDate { get; set; } = DateTime.MaxValue;
         /// <summary>
         /// Filter by date. Min date filter.
         /// </summary>
-        public DateTime ReleaseDateStart { get; set; } = DateTime.MinValue;
+        public DateTime Startdate { get; set; } = DateTime.MinValue;
         /// <summary>
         /// Stage name.
         /// </summary>

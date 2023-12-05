@@ -13,7 +13,7 @@ namespace Services.Implementations
         /// <summary>
         /// Repository inherit from baseRepository.
         /// </summary>
-        public readonly BaseRepository<T> Repository = repository;
+        public readonly BaseRepository<T> BaseRepository = repository;
 
         /// <summary>
         /// Creates a new Record <typeparamref name="T"/>
@@ -22,7 +22,7 @@ namespace Services.Implementations
         /// <returns><typeparamref name="T"/></returns>
         public virtual T Create(T entity)
         {
-            return Repository.Create(entity);
+            return BaseRepository.Create(entity);
         }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace Services.Implementations
         /// <param name="deletedBy">Person who deactivates <typeparamref name="T"/></param>
         public virtual void Delete(Guid id, string deletedBy)
         {
-            Repository.Delete(id, deletedBy);
+            BaseRepository.Delete(id, deletedBy);
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace Services.Implementations
         /// <returns>List of <typeparamref name="T"/> matching the query.</returns>
         public virtual List<T> GetAll(T filter)
         {
-            return Repository.GetAll(filter);
+            return BaseRepository.GetAll(filter);
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace Services.Implementations
         /// <returns>Entity <typeparamref name="T"/></returns>
         public virtual T GetById(Guid id)
         {
-            return Repository.GetById(id);
+            return BaseRepository.GetById(id);
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace Services.Implementations
         /// <returns>Entity <typeparamref name="T"/> updated.</returns>
         public virtual T Update(T entity)
         {
-            return Repository.Update(entity);
+            return BaseRepository.Update(entity);
         }
     }
 }

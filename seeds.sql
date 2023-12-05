@@ -63,6 +63,14 @@ BEGIN TRY
 	(NEWID(), 'Lot.See', 'See roles', 'See roles', 1, GETDATE(), @defaultCreatedBy),
 	(NEWID(), 'Lot.Delete', 'Delete roles', 'Delete roles', 1, GETDATE(), @defaultCreatedBy);
 
+	--LotCategory module.
+	INSERT INTO [Permissions] (Id,[Key], [Name], [Description], IsActive, CreatedAt, CreatedBy)
+	VALUES
+	(NEWID(), 'LotCategory.Update', 'Update roles', 'Update roles', 1, GETDATE(), @defaultCreatedBy),
+	(NEWID(), 'LotCategory.Create', 'Create roles', 'Create roles', 1, GETDATE(), @defaultCreatedBy),
+	(NEWID(), 'LotCategory.See', 'See roles', 'See roles', 1, GETDATE(), @defaultCreatedBy),
+	(NEWID(), 'LotCategory.Delete', 'Delete roles', 'Delete roles', 1, GETDATE(), @defaultCreatedBy);
+
 
 	--Added all permissionns to admin role.
 	DELETE FROM RolePermissions WHERE RoleId = @roleId;

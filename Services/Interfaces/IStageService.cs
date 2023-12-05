@@ -1,11 +1,12 @@
 ﻿using Entities.Models.Developments;
+using Repositories.Implementations;
 
-namespace Repositories.Interfaces
+namespace Services.Interfaces
 {
     /// <summary>
-    /// Stage repository interface.
+    /// Stage service interface.
     /// </summary>
-    internal interface IStageRepository : IBaseRepository<Stage>
+    public interface IStageService : IBaseService<Stage, StageRepository>
     {
         /// <summary>
         /// Search stages by the provided filters.

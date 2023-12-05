@@ -49,9 +49,10 @@ namespace Repositories.Implementations
             releaseDateStart ??= DateTime.MinValue;
             return
             [.. Context.Stages.Where(x => x.IsActive &&
-                    (x.Name.Contains(filter.Name) ||
-                    x.Description.Contains(filter.Description) ||
-                    (x.ReleaseDate >= releaseDateStart && x.ReleaseDate <= releaseDateEnd))
+                    x.Name.Contains(filter.Name) &&
+                    x.Description.Contains(filter.Description) &&
+                    x.ReleaseDate >= releaseDateStart && x.ReleaseDate <= releaseDateEnd ||
+                    x.DevelopmentId.Equals(filter.DevelopmentId)
                     )
             ];
         }
@@ -63,7 +64,7 @@ namespace Repositories.Implementations
         /// <returns>Stage with lots.</returns>
         public new Stage GetById(Guid id)
         {
-            return Context.Stages.Include(x => x.Lots).First(x => x.Id == id && x.IsActive);
+            return Context.Stages.Include(x => x.Lots).Include(x=>x.Development).First(x => x.Id == id && x.IsActive);
         }
 
         /// <summary>

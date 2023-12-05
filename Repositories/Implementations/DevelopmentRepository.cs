@@ -39,9 +39,9 @@ namespace Repositories.Implementations
             return
             [.. Context.Developments
                     .Where(x=>x.IsActive &&
-                    (x.Name.Contains(filter.Name) ||
-                    x.Description.Contains(filter.Description) ||
-                    (x.ReleaseDate >= releaseDateStart && x.ReleaseDate<= releaseDateEnd)))
+                    x.Name.Contains(filter.Name) &&
+                    x.Description.Contains(filter.Description) &&
+                    x.ReleaseDate >= releaseDateStart && x.ReleaseDate<= releaseDateEnd)
             ];
         }
 

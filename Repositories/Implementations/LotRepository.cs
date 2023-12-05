@@ -1,12 +1,7 @@
-﻿using Repositories.Interfaces;
-using SQLDB.Context;
+﻿using Entities.Models.Developments;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Entities.Models.Developments;
+using Repositories.Interfaces;
+using SQLDB.Context;
 
 namespace Repositories.Implementations
 {
@@ -24,9 +19,9 @@ namespace Repositories.Implementations
         /// </summary>
         /// <param name="filter">Base entity to filter.</param>
         /// <returns>List of entities matching the search query.</returns>
-        public new List<Lot> GetAll(Lot filter)
+        public override List<Lot> GetAll(Lot filter)
         {
-            return [.. Context.Lots.Include(x=>x.Category).Where(x => x.IsActive &&
+            return [.. Context.Lots.Include(x => x.Category).Where(x => x.IsActive &&
             x.Name.Contains(filter.Name)
             )];
         }
@@ -36,9 +31,9 @@ namespace Repositories.Implementations
         /// </summary>
         /// <param name="id">ID to search.</param>
         /// <returns>Matching entity.</returns>
-        public new Lot GetById(Guid id)
+        public override Lot GetById(Guid id)
         {
-            return Context.Lots.Include(x=>x.Category).First(x => x.Id == id && x.IsActive);
+            return Context.Lots.Include(x => x.Category).First(x => x.Id == id && x.IsActive);
         }
 
         /// <summary>
@@ -46,7 +41,7 @@ namespace Repositories.Implementations
         /// </summary>
         /// <param name="entity">Data to update from the entity</param>
         /// <returns>Entity updated.</returns>
-        public new Lot Update(Lot entity)
+        public override Lot Update(Lot entity)
         {
             try
             {
@@ -57,7 +52,7 @@ namespace Repositories.Implementations
                 lot.BottomMeters = entity.BottomMeters;
                 lot.PricePerSquareMeterUsed = entity.PricePerSquareMeterUsed;
                 lot.LotCategoryId = entity.LotCategoryId;
-                Context.Lots.Update(entity);
+                Context.Lots.Update(lot);
                 Context.SaveChanges();
                 return entity;
             }

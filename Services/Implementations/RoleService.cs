@@ -15,7 +15,47 @@ namespace Services.Implementations
     /// <param name="context">DB context.</param>
     public class RoleService(SqlContext context) : BaseService<Role>(new RoleRepository(context)), IRoleService
     {
-        public new required RoleRepository Repository = new(context);
+        public readonly RoleRepository Repository = new(context);
+
+        /// <summary>
+        /// Deactivates an existing <typeparamref name="Role"/> record on DB.
+        /// </summary>
+        /// <param name="id"><typeparamref name="Role"/> ID.</param>
+        /// <param name="deletedBy">Person who deactivates <typeparamref name="Role"/></param>
+        public override void Delete(Guid id, string deletedBy)
+        {
+            Repository.Delete(id, deletedBy);
+        }
+
+        /// <summary>
+        /// Gets a list of <typeparamref name="Role"/> which matches the query.
+        /// </summary>
+        /// <param name="filter">Entity <typeparamref name="Role"/> used to filter.</param>
+        /// <returns>List of <typeparamref name="Role"/> matching the query.</returns>
+        public override List<Role> GetAll(Role filter)
+        {
+            return Repository.GetAll(filter);
+        }
+
+        /// <summary>
+        /// Get an entity <typeparamref name="Role"/> by his <paramref name="id"/>
+        /// </summary>
+        /// <param name="id"><typeparamref name="Role"/> ID.</param>
+        /// <returns>Entity <typeparamref name="Role"/></returns>
+        public override Role GetById(Guid id)
+        {
+            return Repository.GetById(id);
+        }
+
+        /// <summary>
+        /// Updates a <typeparamref name="Role"/> record.
+        /// </summary>
+        /// <param name="entity">Entity <typeparamref name="Role"/> with data to update.</param>
+        /// <returns>Entity <typeparamref name="Role"/> updated.</returns>
+        public override Role Update(Role entity)
+        {
+            return Repository.Update(entity);
+        }
 
         /// <summary>
         /// Determinates if a provided role has a permission.
