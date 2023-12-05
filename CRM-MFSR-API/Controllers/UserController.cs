@@ -3,7 +3,7 @@ using CRM_MFSR_API.Models.Dtos.Entities;
 using CRM_MFSR_API.Models.Request.User;
 using CRM_MFSR_API.Models.Responses;
 using CRM_MFSR_API.Models.Responses.Security;
-using Entities.Models;
+using Entities.Models.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NuGet.Protocol;
@@ -23,7 +23,7 @@ namespace CRM_MFSR_API.Controllers
         /// <summary>
         /// User Service.
         /// </summary>
-        private IUserService<User> Service { get; set; }
+        private IUserService Service { get; set; }
 
         /// <summary>
         /// Automapper Service
@@ -35,7 +35,7 @@ namespace CRM_MFSR_API.Controllers
         /// </summary>
         /// <param name="service">User Service Interface. Dependency Injection.</param>
         /// <param name="mapper">Automapper interface.</param>
-        public UserController(IUserService<User> service, IMapper mapper)
+        public UserController(IUserService service, IMapper mapper)
         {
             Service = service;
             _mapper = mapper;
@@ -69,7 +69,7 @@ namespace CRM_MFSR_API.Controllers
         [HttpPost("Search")]
         [Authorize]
         [Authorize(Policy = "User.See")]
-        public ActionResult<List<UserDto>> Search(SearchRequest filters)
+        public ActionResult<List<UserDto>> Search(SearchUserRequest filters)
         {
             try
             {
@@ -88,7 +88,7 @@ namespace CRM_MFSR_API.Controllers
         [HttpPost("Create")]
         [Authorize]
         [Authorize(Policy = "User.Create")]
-        public ActionResult<UserDto> Create(CreateRequest data)
+        public ActionResult<UserDto> Create(CreateUserRequest data)
         {
             try
             {
@@ -107,7 +107,7 @@ namespace CRM_MFSR_API.Controllers
         [HttpPut("Update")]
         [Authorize]
         [Authorize(Policy = "User.Update")]
-        public ActionResult<UserDto> Update(UpdateRequest data)
+        public ActionResult<UserDto> Update(UpdateUserRequest data)
         {
             try
             {

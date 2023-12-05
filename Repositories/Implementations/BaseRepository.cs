@@ -8,28 +8,23 @@ namespace Repositories.Implementations
     /// Generic implementation of base repository.
     /// </summary>
     /// <typeparam name="T">Base Attribute from DB entities.</typeparam>
-    public class BaseRepository<T> : IBaseRepository<T> where T : BaseAttributes
+    /// <remarks>
+    /// Constructor.
+    /// </remarks>
+    /// <param name="context">DBContext.</param>
+    public class BaseRepository<T>(SqlContext context) : IBaseRepository<T> where T : BaseAttributes
     {
         /// <summary>
         /// DBContext.
         /// </summary>
-        private SqlContext Context { get; set; }
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="context">DBContext.</param>
-        public BaseRepository(SqlContext context)
-        {
-            Context = context;
-        }
+        public readonly SqlContext Context = context;
 
         /// <summary>
         /// Creates a new row of the provided Entity.
         /// </summary>
         /// <param name="entity">Data to save.</param>
         /// <returns>Record saved.</returns>
-        public T Create(T entity)
+        public virtual T Create(T entity)
         {
             try
             {
@@ -48,7 +43,7 @@ namespace Repositories.Implementations
         /// </summary>
         /// <param name="id">Entity ID</param>
         /// <param name="deletedBy">User who delete the entity.</param>
-        public void Delete(Guid id, string deletedBy)
+        public virtual void Delete(Guid id, string deletedBy)
         {
             try
             {
@@ -70,9 +65,9 @@ namespace Repositories.Implementations
         /// </summary>
         /// <param name="filter">Base entity to filter.</param>
         /// <returns>List of entities matching the search query.</returns>
-        public List<T> GetAll(T filter)
+        public virtual List<T> GetAll(T filter)
         {
-            return Context.Set<T>().Where(x => x == filter).ToList();
+            return [.. Context.Set<T>().Where(x => x == filter)];
         }
 
         /// <summary>
@@ -80,9 +75,9 @@ namespace Repositories.Implementations
         /// </summary>
         /// <param name="id">ID to search.</param>
         /// <returns>Matching entity.</returns>
-        public T GetById(Guid id)
+        public virtual T GetById(Guid id)
         {
-            return Context.Set<T>().First(x => x.Id == id);
+            return Context.Set<T>().First(x => x.Id == id && x.IsActive);
         }
 
         /// <summary>
@@ -90,11 +85,11 @@ namespace Repositories.Implementations
         /// </summary>
         /// <param name="entity">Data to update from the entity</param>
         /// <returns>Entity updated.</returns>
-        public T Update(T entity)
+        public virtual T Update(T entity)
         {
             try
             {
-                Context.Update(entity);
+                Context.Set<T>().Update(entity);
                 Context.SaveChanges();
                 return entity;
             }

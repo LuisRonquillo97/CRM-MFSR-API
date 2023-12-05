@@ -1,4 +1,4 @@
-﻿using Entities.Models;
+﻿using Entities.Models.Users;
 
 namespace Repositories.Interfaces
 {
@@ -6,8 +6,7 @@ namespace Repositories.Interfaces
     /// Interface for role repository.
     /// </summary>
     /// <remarks>Inherits from the base repository</remarks>
-    /// <typeparam name="T">DB Entity</typeparam>
-    public interface IRoleRepository<T> : IBaseRepository<T> where T : class
+    public interface IRoleRepository : IBaseRepository<Role>
     {
         /// <summary>
         /// Determinates if the provided role has a specific permission.

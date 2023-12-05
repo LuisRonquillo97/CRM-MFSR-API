@@ -1,5 +1,4 @@
 using CRM_MFSR_API.MappingProfiles.EntitiesDto;
-using Entities.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -35,9 +34,9 @@ builder.Services.AddSwaggerGen(c =>
     });
     c.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme
     {
-        Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n 
-                      Enter 'Bearer' [space] and then your token in the text input below.
-                      \r\n\r\nExample: 'Bearer 12345abcdef'",
+        Description = @"JWT Authorization header using the Bearer scheme.  Call /api/User/Login and copy the token.
+                      Then, enter 'Bearer' [space] and then your token in the text input below.
+                      Example: 'Bearer 12345abcdef'",
         Name = "Authorization",
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.ApiKey,
@@ -53,7 +52,7 @@ builder.Services.AddSwaggerGen(c =>
          Id = JwtBearerDefaults.AuthenticationScheme
        }
       },
-      new string[] { }
+      Array.Empty<string>()
     }
   });
     var filePath = Path.Combine(AppContext.BaseDirectory, "CRM-MFSR-API.xml");
@@ -65,9 +64,14 @@ string connection = new ConfigurationBuilder().AddJsonFile(path: Directory.GetCu
 builder.Services.AddDbContext<SqlContext>(options => options.UseSqlServer(connection));
 
 // Add services to the container.
-builder.Services.AddTransient<IUserService<User>, UserService>();
-builder.Services.AddTransient<IRoleService<Role>, RoleService>();
-
+#region Services
+builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IRoleService, RoleService>();
+builder.Services.AddTransient<IDevelopmentService, DevelopmentService>();
+builder.Services.AddTransient<IStageService, StageService>();
+builder.Services.AddTransient<ILotSerivce, LotService>();
+builder.Services.AddTransient<ILotCategoryService, LotCategoryService>();
+#endregion
 //controllers
 builder.Services.AddControllers().AddJsonOptions(options =>
 {

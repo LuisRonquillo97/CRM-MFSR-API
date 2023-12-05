@@ -1,4 +1,4 @@
-﻿using Entities.Models;
+﻿using Entities.Models.Users;
 using Microsoft.AspNetCore.Authorization;
 using Security.Requirements;
 using Services.Interfaces;
@@ -8,9 +8,9 @@ namespace Security.Handlers
 {
     public class ByNameHandler : AuthorizationHandler<ByNameRequirement>
     {
-        private readonly IRoleService<Role> service;
+        private readonly IRoleService service;
         private readonly string permissionKey = "users.see";
-        public ByNameHandler(IRoleService<Role> service)
+        public ByNameHandler(IRoleService service)
         {
             this.service = service;
         }

@@ -22,7 +22,222 @@ namespace SQLDB.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Entities.Models.Permission", b =>
+            modelBuilder.Entity("Entities.Models.Developments.Development", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<DateTime?>("DeactivatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeactivatedBy")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastUpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(75)
+                        .HasColumnType("nvarchar(75)");
+
+                    b.Property<DateTime?>("ReleaseDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ResourcesUri")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Developments");
+                });
+
+            modelBuilder.Entity("Entities.Models.Developments.Lot", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double>("BottomMeters")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<DateTime?>("DeactivatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeactivatedBy")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<double>("FrontMeters")
+                        .HasColumnType("float");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastUpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<Guid>("LotCategoryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<double>("PricePerSquareMeterUsed")
+                        .HasColumnType("float");
+
+                    b.Property<Guid>("StageId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LotCategoryId");
+
+                    b.HasIndex("StageId");
+
+                    b.ToTable("Lots");
+                });
+
+            modelBuilder.Entity("Entities.Models.Developments.LotCategory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<DateTime?>("DeactivatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeactivatedBy")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastUpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LotCategories");
+                });
+
+            modelBuilder.Entity("Entities.Models.Developments.Stage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<DateTime?>("DeactivatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeactivatedBy")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("DevelopmentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastUpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("PricePerSquareMeter")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime?>("ReleaseDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DevelopmentId");
+
+                    b.ToTable("Stages");
+                });
+
+            modelBuilder.Entity("Entities.Models.Users.Permission", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -78,8 +293,8 @@ namespace SQLDB.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("335bdf65-8603-47ca-ba68-4c13d84fd23f"),
-                            CreatedAt = new DateTime(2023, 11, 28, 17, 24, 39, 69, DateTimeKind.Utc).AddTicks(723),
+                            Id = new Guid("f2824bc7-0ea1-4f18-9fcf-092cbf75ec69"),
+                            CreatedAt = new DateTime(2023, 12, 5, 10, 24, 57, 120, DateTimeKind.Local).AddTicks(5763),
                             CreatedBy = "MainSeed",
                             Description = "See all users for the role Admin.",
                             IsActive = true,
@@ -88,8 +303,8 @@ namespace SQLDB.Migrations
                         },
                         new
                         {
-                            Id = new Guid("fd6017b3-efcf-4a2d-b1f2-4d92c190c4db"),
-                            CreatedAt = new DateTime(2023, 11, 28, 17, 24, 39, 69, DateTimeKind.Utc).AddTicks(736),
+                            Id = new Guid("31851b9e-091b-4755-8d35-d1cfbc7110d2"),
+                            CreatedAt = new DateTime(2023, 12, 5, 10, 24, 57, 120, DateTimeKind.Local).AddTicks(5766),
                             CreatedBy = "MainSeed",
                             Description = "Create users.",
                             IsActive = true,
@@ -98,7 +313,7 @@ namespace SQLDB.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Entities.Models.Role", b =>
+            modelBuilder.Entity("Entities.Models.Users.Role", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -149,8 +364,8 @@ namespace SQLDB.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("7a140337-39ee-4f01-aa97-160cd718cd26"),
-                            CreatedAt = new DateTime(2023, 11, 28, 11, 24, 39, 69, DateTimeKind.Local).AddTicks(690),
+                            Id = new Guid("12b1c2b4-c6f3-43cf-8bc2-77e9b6ff0ad1"),
+                            CreatedAt = new DateTime(2023, 12, 5, 10, 24, 57, 120, DateTimeKind.Local).AddTicks(5712),
                             CreatedBy = "mainSeed",
                             Description = "Has full permissions.",
                             IsActive = true,
@@ -158,7 +373,7 @@ namespace SQLDB.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Entities.Models.RolePermission", b =>
+            modelBuilder.Entity("Entities.Models.Users.RolePermission", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -206,25 +421,25 @@ namespace SQLDB.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("355dd94c-d96d-420b-bb2c-68249ccdf787"),
-                            CreatedAt = new DateTime(2023, 11, 28, 11, 24, 39, 69, DateTimeKind.Local).AddTicks(762),
+                            Id = new Guid("ba950a54-58d9-49f9-84c6-5c68367d76a2"),
+                            CreatedAt = new DateTime(2023, 12, 5, 10, 24, 57, 120, DateTimeKind.Local).AddTicks(5783),
                             CreatedBy = "",
                             IsActive = true,
-                            PermissionId = new Guid("335bdf65-8603-47ca-ba68-4c13d84fd23f"),
-                            RoleId = new Guid("7a140337-39ee-4f01-aa97-160cd718cd26")
+                            PermissionId = new Guid("f2824bc7-0ea1-4f18-9fcf-092cbf75ec69"),
+                            RoleId = new Guid("12b1c2b4-c6f3-43cf-8bc2-77e9b6ff0ad1")
                         },
                         new
                         {
-                            Id = new Guid("e682a05f-51b9-47a6-9629-5d369193c8aa"),
-                            CreatedAt = new DateTime(2023, 11, 28, 11, 24, 39, 69, DateTimeKind.Local).AddTicks(767),
+                            Id = new Guid("616d58f9-022a-4383-97c5-f9ed8bbd2ae2"),
+                            CreatedAt = new DateTime(2023, 12, 5, 10, 24, 57, 120, DateTimeKind.Local).AddTicks(5786),
                             CreatedBy = "",
                             IsActive = true,
-                            PermissionId = new Guid("fd6017b3-efcf-4a2d-b1f2-4d92c190c4db"),
-                            RoleId = new Guid("7a140337-39ee-4f01-aa97-160cd718cd26")
+                            PermissionId = new Guid("31851b9e-091b-4755-8d35-d1cfbc7110d2"),
+                            RoleId = new Guid("12b1c2b4-c6f3-43cf-8bc2-77e9b6ff0ad1")
                         });
                 });
 
-            modelBuilder.Entity("Entities.Models.User", b =>
+            modelBuilder.Entity("Entities.Models.Users.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -285,8 +500,8 @@ namespace SQLDB.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("9667c42e-e7ee-460e-8253-408e02b934f6"),
-                            CreatedAt = new DateTime(2023, 11, 28, 11, 24, 39, 69, DateTimeKind.Local).AddTicks(490),
+                            Id = new Guid("59aa1454-a84e-4072-968b-221d8a2d20fe"),
+                            CreatedAt = new DateTime(2023, 12, 5, 10, 24, 57, 120, DateTimeKind.Local).AddTicks(5564),
                             CreatedBy = "mainSeed",
                             Email = "admin@mail.com",
                             FirstName = "First",
@@ -296,7 +511,7 @@ namespace SQLDB.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Entities.Models.UserRole", b =>
+            modelBuilder.Entity("Entities.Models.Users.UserRole", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -344,24 +559,54 @@ namespace SQLDB.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("16e7f2f6-13ea-47bf-af08-304844fdad03"),
-                            CreatedAt = new DateTime(2023, 11, 28, 17, 24, 39, 69, DateTimeKind.Utc).AddTicks(801),
+                            Id = new Guid("6e9aea3b-e597-4050-9536-beae3c57dff7"),
+                            CreatedAt = new DateTime(2023, 12, 5, 10, 24, 57, 120, DateTimeKind.Local).AddTicks(5805),
                             CreatedBy = "mainSeed",
                             IsActive = true,
-                            RoleId = new Guid("7a140337-39ee-4f01-aa97-160cd718cd26"),
-                            UserId = new Guid("9667c42e-e7ee-460e-8253-408e02b934f6")
+                            RoleId = new Guid("12b1c2b4-c6f3-43cf-8bc2-77e9b6ff0ad1"),
+                            UserId = new Guid("59aa1454-a84e-4072-968b-221d8a2d20fe")
                         });
                 });
 
-            modelBuilder.Entity("Entities.Models.RolePermission", b =>
+            modelBuilder.Entity("Entities.Models.Developments.Lot", b =>
                 {
-                    b.HasOne("Entities.Models.Permission", "Permission")
+                    b.HasOne("Entities.Models.Developments.LotCategory", "Category")
+                        .WithMany("Lots")
+                        .HasForeignKey("LotCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Entities.Models.Developments.Stage", "Stage")
+                        .WithMany("Lots")
+                        .HasForeignKey("StageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Stage");
+                });
+
+            modelBuilder.Entity("Entities.Models.Developments.Stage", b =>
+                {
+                    b.HasOne("Entities.Models.Developments.Development", "Development")
+                        .WithMany("Stages")
+                        .HasForeignKey("DevelopmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Development");
+                });
+
+            modelBuilder.Entity("Entities.Models.Users.RolePermission", b =>
+                {
+                    b.HasOne("Entities.Models.Users.Permission", "Permission")
                         .WithMany("RolePermissions")
                         .HasForeignKey("PermissionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Entities.Models.Role", "Role")
+                    b.HasOne("Entities.Models.Users.Role", "Role")
                         .WithMany("RolePermissions")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -372,15 +617,15 @@ namespace SQLDB.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("Entities.Models.UserRole", b =>
+            modelBuilder.Entity("Entities.Models.Users.UserRole", b =>
                 {
-                    b.HasOne("Entities.Models.Role", "Role")
+                    b.HasOne("Entities.Models.Users.Role", "Role")
                         .WithMany("UserRoles")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Entities.Models.User", "User")
+                    b.HasOne("Entities.Models.Users.User", "User")
                         .WithMany("UserRoles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -391,19 +636,34 @@ namespace SQLDB.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Entities.Models.Permission", b =>
+            modelBuilder.Entity("Entities.Models.Developments.Development", b =>
+                {
+                    b.Navigation("Stages");
+                });
+
+            modelBuilder.Entity("Entities.Models.Developments.LotCategory", b =>
+                {
+                    b.Navigation("Lots");
+                });
+
+            modelBuilder.Entity("Entities.Models.Developments.Stage", b =>
+                {
+                    b.Navigation("Lots");
+                });
+
+            modelBuilder.Entity("Entities.Models.Users.Permission", b =>
                 {
                     b.Navigation("RolePermissions");
                 });
 
-            modelBuilder.Entity("Entities.Models.Role", b =>
+            modelBuilder.Entity("Entities.Models.Users.Role", b =>
                 {
                     b.Navigation("RolePermissions");
 
                     b.Navigation("UserRoles");
                 });
 
-            modelBuilder.Entity("Entities.Models.User", b =>
+            modelBuilder.Entity("Entities.Models.Users.User", b =>
                 {
                     b.Navigation("UserRoles");
                 });

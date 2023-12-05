@@ -1,4 +1,5 @@
-﻿using Entities.Models;
+﻿using Entities.Models.Developments;
+using Entities.Models.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace SQLDB.Context
@@ -33,6 +34,23 @@ namespace SQLDB.Context
         /// </summary>
         public DbSet<RolePermission> RolePermissions { get; set; }
 
+        public DbSet<Development> Developments { get; set; }
+
+        /// <summary>
+        /// Stages entity.
+        /// </summary>
+        public DbSet<Stage> Stages { get; set; }
+
+        /// <summary>
+        /// Lots entity.
+        /// </summary>
+        public DbSet<Lot> Lots { get; set; }
+
+        /// <summary>
+        /// Lot categories entity.
+        /// </summary>
+        public DbSet<LotCategory> LotCategories { get; set; }
+
         /// <summary>
         /// Actions to be performed when models are being created
         /// </summary>
@@ -42,9 +60,10 @@ namespace SQLDB.Context
             #region Indexes
             modelBuilder.Entity<User>().HasIndex(x => x.Email).IsUnique();
             modelBuilder.Entity<Role>().HasIndex(x => x.Name).IsUnique();
-            modelBuilder.Entity<Permission>().HasIndex(x=>x.Key).IsUnique();
+            modelBuilder.Entity<Permission>().HasIndex(x => x.Key).IsUnique();
             #endregion
             #region Relationships
+            #region User, role and permissions
             //userRoles with roles
             modelBuilder.Entity<UserRole>().HasOne(x => x.Role).WithMany(x => x.UserRoles).HasForeignKey(x => x.RoleId).HasPrincipalKey(x => x.Id);
             //userRoles with users
@@ -52,6 +71,12 @@ namespace SQLDB.Context
             //roles with permissions
             modelBuilder.Entity<RolePermission>().HasOne(x => x.Role).WithMany(x => x.RolePermissions).HasForeignKey(x => x.RoleId).HasPrincipalKey(x => x.Id);
             modelBuilder.Entity<RolePermission>().HasOne(x => x.Permission).WithMany(x => x.RolePermissions).HasForeignKey(x => x.PermissionId).HasPrincipalKey(x => x.Id);
+            #endregion
+            #region Real state developments
+            modelBuilder.Entity<Development>().HasMany(x => x.Stages).WithOne(x => x.Development).HasForeignKey(x => x.DevelopmentId).HasPrincipalKey(x => x.Id);
+            modelBuilder.Entity<Stage>().HasMany(x => x.Lots).WithOne(x => x.Stage).HasForeignKey(x => x.StageId).HasPrincipalKey(x => x.Id);
+            modelBuilder.Entity<LotCategory>().HasMany(x => x.Lots).WithOne(x => x.Category).HasForeignKey(x => x.LotCategoryId).HasPrincipalKey(x => x.Id);
+            #endregion
             #endregion
             #region seeds
             //base values
@@ -86,7 +111,7 @@ namespace SQLDB.Context
                     Name = "See users",
                     Description = "See all users for the role Admin.",
                     Key = "User.See",
-                    CreatedAt = DateTime.UtcNow,
+                    CreatedAt = DateTime.Now,
                     CreatedBy = "MainSeed",
                     IsActive = true
                 },
@@ -96,7 +121,7 @@ namespace SQLDB.Context
                     Name = "Create users",
                     Description = "Create users.",
                     Key = "User.Create",
-                    CreatedAt = DateTime.UtcNow,
+                    CreatedAt = DateTime.Now,
                     CreatedBy = "MainSeed",
                     IsActive = true
                 },
@@ -118,7 +143,7 @@ namespace SQLDB.Context
                     Id = Guid.NewGuid(),
                     RoleId = roleId,
                     UserId = userId,
-                    CreatedAt = DateTime.UtcNow,
+                    CreatedAt = DateTime.Now,
                     CreatedBy = createdBy
                 }
                 );

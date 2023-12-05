@@ -1,4 +1,4 @@
-﻿using Entities.Models;
+﻿using Entities.Models.Users;
 
 namespace Repositories.Interfaces
 {
@@ -6,8 +6,7 @@ namespace Repositories.Interfaces
     /// Interface for role repository.
     /// </summary>
     /// <remarks>Inherits from the base repository</remarks>
-    /// <typeparam name="T">DB Entity</typeparam>
-    public interface IUserRepository<T> : IBaseRepository<T> where T : class
+    public interface IUserRepository : IBaseRepository<User>
     {
         /// <summary>
         /// Validates if the user can login with his email and password.
@@ -15,6 +14,6 @@ namespace Repositories.Interfaces
         /// <param name="email">email.</param>
         /// <param name="password">password.</param>
         /// <returns>User data.</returns>
-        T ValidateLogin(string email, string password);
+        User ValidateLogin(string email, string password);
     }
 }

@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using CRM_MFSR_API.Models.Dtos.Entities;
+using CRM_MFSR_API.Models.Request.Role;
 using CRM_MFSR_API.Models.Responses;
-using Entities.Models;
+using Entities.Models.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
@@ -19,7 +20,7 @@ namespace CRM_MFSR_API.Controllers
         /// <summary>
         /// Role Service.
         /// </summary>
-        private IRoleService<Role> Service { get; set; }
+        private IRoleService Service { get; set; }
 
         /// <summary>
         /// Automapper Service
@@ -31,7 +32,7 @@ namespace CRM_MFSR_API.Controllers
         /// </summary>
         /// <param name="service">User Service Interface. Dependency Injection.</param>
         /// <param name="mapper">Automapper instance.</param>
-        public RoleController(IRoleService<Role> service, IMapper mapper)
+        public RoleController(IRoleService service, IMapper mapper)
         {
             Service = service;
             _mapper = mapper;
@@ -63,11 +64,11 @@ namespace CRM_MFSR_API.Controllers
         /// <returns>Matching users.</returns>
         [HttpPost("Search")]
         [Authorize(Policy = "Role.See")]
-        public ActionResult<List<RoleDto>> Search(RoleDto filters)
+        public ActionResult<List<RoleDto>> Search(SearchRoleRequest filters)
         {
             try
             {
-                return Ok(_mapper.Map<List<Role>, List<RoleDto>>(Service.GetAll(_mapper.Map<RoleDto, Role>(filters))));
+                return Ok(_mapper.Map<List<Role>, List<RoleDto>>(Service.GetAll(_mapper.Map<RoleDto, Role>(filters.ToRoleDto()))));
             }
             catch (Exception ex)
             {
@@ -81,11 +82,11 @@ namespace CRM_MFSR_API.Controllers
         /// <returns>Record added.</returns>
         [HttpPost("Create")]
         [Authorize(Policy = "Role.Create")]
-        public ActionResult<RoleDto> Create(RoleDto data)
+        public ActionResult<RoleDto> Create(CreateRoleRequest data)
         {
             try
             {
-                return Ok(_mapper.Map<Role, RoleDto>(Service.Create(_mapper.Map<RoleDto, Role>(data))));
+                return Ok(_mapper.Map<Role, RoleDto>(Service.Create(_mapper.Map<RoleDto, Role>(data.ToRoleDto()))));
             }
             catch (Exception ex)
             {
@@ -99,12 +100,12 @@ namespace CRM_MFSR_API.Controllers
         /// <returns>Record updated.</returns>
         [HttpPut("Update")]
         [Authorize(Policy = "Role.Update")]
-        public ActionResult<RoleDto> Update(RoleDto data)
+        public ActionResult<RoleDto> Update(UpdateRoleRequest data)
         {
             try
             {
 
-                return Ok(_mapper.Map<Role, RoleDto>(Service.Update(_mapper.Map<RoleDto, Role>(data))));
+                return Ok(_mapper.Map<Role, RoleDto>(Service.Update(_mapper.Map<RoleDto, Role>(data.ToRoleDto()))));
             }
             catch (Exception ex)
             {

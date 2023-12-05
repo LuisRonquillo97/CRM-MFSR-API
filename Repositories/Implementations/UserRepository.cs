@@ -1,4 +1,4 @@
-﻿using Entities.Models;
+﻿using Entities.Models.Users;
 using Microsoft.EntityFrameworkCore;
 using Repositories.Interfaces;
 using SQLDB.Context;
@@ -8,30 +8,20 @@ namespace Repositories.Implementations
     /// <summary>
     /// User Repository.
     /// </summary>
-    public class UserRepository : BaseRepository<User>, IUserRepository<User>
+    /// <remarks>
+    /// Constructor.
+    /// </remarks>
+    /// <param name="context">DBContext.</param>
+    public class UserRepository(SqlContext context) : BaseRepository<User>(context), IUserRepository
     {
-        /// <summary>
-        /// DBContext.
-        /// </summary>
-        SqlContext Context;
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="context">DBContext.</param>
-        public UserRepository(SqlContext context) : base(context)
-        {
-            Context = context;
-        }
-
         /// <summary>
         /// Override of base GetAll. Gets all users with user roles and each role information.
         /// </summary>
         /// <param name="filter">Filters to apply.</param>
         /// <returns>Matching users query.</returns>
-        public new List<User> GetAll(User filter)
+        public override List<User> GetAll(User filter)
         {
-            List<Guid> roleIds = new List<Guid>();
+            List<Guid> roleIds = [];
             if (filter.UserRoles != null)
             {
                 foreach (var item in filter.UserRoles)
@@ -41,9 +31,9 @@ namespace Repositories.Implementations
             }
 #pragma warning disable CS8620 // El argumento no se puede usar para el parámetro debido a las diferencias en la nulabilidad de los tipos de referencia.
 #pragma warning disable CS8604 // Posible argumento de referencia nulo
-            List<User> users = Context.Users.Where(x => (x.Email.Contains(filter.Email) ||
-            x.FirstName.Contains(filter.FirstName) ||
-            x.LastName.Contains(filter.LastName) ||
+            List<User> users = Context.Users.Where(x => (x.Email.Contains(filter.Email) &&
+            (x.FirstName.Contains(filter.FirstName) ||
+            x.LastName.Contains(filter.LastName)) ||
             x.UserRoles.Any(y => roleIds.Contains(y.RoleId))) &&
             x.IsActive == true
             ).Include(x => x.UserRoles).ThenInclude(x => x.Role).ToList();
@@ -57,9 +47,9 @@ namespace Repositories.Implementations
         /// </summary>
         /// <param name="id">User UUID</param>
         /// <returns>User data.</returns>
-        public new User GetById(Guid id)
+        public override User GetById(Guid id)
         {
-            return Context.Users.Include(x => x.UserRoles).FirstOrDefault(x => x.Id == id) ?? throw new Exception($"User with ID {id} was not found.");
+            return Context.Users.Include(x => x.UserRoles).FirstOrDefault(x => x.Id == id && x.IsActive) ?? throw new Exception($"User with ID {id} was not found.");
         }
 
         /// <summary>
@@ -67,7 +57,7 @@ namespace Repositories.Implementations
         /// </summary>
         /// <param name="entity">Data to update</param>
         /// <returns>Record updated.</returns>
-        public new User Update(User entity)
+        public override User Update(User entity)
         {
             try
             {
@@ -82,11 +72,13 @@ namespace Repositories.Implementations
                     user.LastUpdatedBy = entity.LastUpdatedBy;
                     user.LastUpdatedAt = entity.LastUpdatedAt;
                     Context.Users.Update(user);
-                    if(entity.UserRoles!= null)
+                    if (entity.UserRoles != null)
                     {
                         Context.UserRoles.Where(x => x.UserId == entity.Id).ExecuteDelete();
                         foreach (UserRole role in entity.UserRoles)
                         {
+                            role.CreatedAt = DateTime.Now;
+                            role.CreatedBy = entity.LastUpdatedBy;
                             Context.UserRoles.Add(role);
                         }
                     }
@@ -109,7 +101,7 @@ namespace Repositories.Implementations
         /// </summary>
         /// <param name="id">User UUID.</param>
         /// <param name="deletedBy">Person who deactivate the record.</param>
-        public new void Delete(Guid id, string deletedBy)
+        public override void Delete(Guid id, string deletedBy)
         {
             try
             {
@@ -117,8 +109,9 @@ namespace Repositories.Implementations
                 entity.IsActive = false;
                 entity.DeactivatedAt = DateTime.Now;
                 entity.DeactivatedBy = deletedBy;
-                entity.UserRoles.ForEach(x => { 
-                    x.IsActive = false; 
+                entity.UserRoles?.ForEach(x =>
+                {
+                    x.IsActive = false;
                     x.DeactivatedBy = deletedBy;
                     x.DeactivatedAt = DateTime.Now;
                 });
